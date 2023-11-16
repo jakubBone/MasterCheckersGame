@@ -30,11 +30,12 @@ public class Game {
         for (int i = 0; i < 3;) {
             for (int j = 0; j < 8; j++) {
                 board[i][j] = computerPawn;
-                j += 2;
+                j += 1;
             }
-            i+=2;
+            i+=1;
         }
     }
+
 
     void setValidField() {
         for (int i = 0; i < 8; i++) {
