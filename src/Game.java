@@ -3,9 +3,6 @@ public class Game {
     private char playerPawn = 'O';
     private char computerPawn = 'X';
 
-    private char [][] validComputerFields = new char[8][8];
-    private char [][] validPlayerFields = new char[8][8];
-
     private static char[][] board = new char[8][8];
 
     static void printBoard() {
@@ -26,26 +23,34 @@ public class Game {
         }
     }
 
-    void setStartPosition() {
-        for (int i = 0; i < 3;) {
-            for (int j = 0; j < 8; j++) {
-                board[i][j] = computerPawn;
-                j += 1;
-            }
-            i+=1;
+    void locateComputerPawns() {
+        for (int i = 0; i < 3; i++) {
+                if (i % 2 == 0) {
+                    for (int j = 0; j < 8; j++) {
+                        board[i][j] = computerPawn;
+                        j++;
+                    }
+                } else {
+                    for (int j = 1; j < 8; j++) {
+                        board[i][j] = computerPawn;
+                        j++;
+                    }
+                }
         }
     }
-
-
-    void setValidField() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (i % 2 == 0)
-                    validComputerFields[i][j] = board[i][j];
-                else
-                    validPlayerFields[i][j] = board [i][j];
-            }
+    void locatePlayerPawns() {
+        for (int i = 5; i < 8; i++) {
+                if (i % 2 == 0) {
+                    for (int j = 0; j < 8; j++) {
+                        board[i][j] = playerPawn;
+                        j++;
+                    }
+                } else {
+                    for (int j = 1; j < 8; j++) {
+                        board[i][j] = playerPawn;
+                        j++;
+                    }
+                }
         }
-
     }
 }
