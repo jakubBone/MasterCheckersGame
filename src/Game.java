@@ -22,18 +22,18 @@ public class Game {
     }*/
 
     static void printBoard() {
-        System.out.println("    A   B   C   D   E   F   G   H   I   J");
+        System.out.println("    A   B   C   D   E   F   G   H");
         System.out.print("  ");
-        for (int i = 0; i < 10; ++i)
+        for (int i = 0; i < 8; i++)
             System.out.print("+---");
         System.out.print("+\n");
-        for (int i = 0; i < 10; ++i) {
-            System.out.print((i) + " ");
-            for (int j = 0; j < 10; ++j) {
+        for (int i = 0; i < 8; i++) {
+            System.out.print((i + 1) + " ");
+            for (int j = 0; j < 8; j++) {
                 System.out.print("| " + board[i][j] + " ");
             }
             System.out.print("|\n  ");
-            for (int k = 0; k < 10; ++k)
+            for (int k = 0; k < 8; k++)
                 System.out.print("+---");
             System.out.print("+\n");
         }
