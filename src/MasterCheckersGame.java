@@ -1,11 +1,12 @@
 public class MasterCheckersGame {
     public static void main(String[] args) {
         Game game = new Game();
-        Game.printBoard();
+        game.printBoard();
         game.locateComputerPawns();
         game.locatePlayerPawns();
-        Game.printBoard();
+        game.printBoard();
 
-
+        game.performMove();
+        game.printBoard();
     }
 }

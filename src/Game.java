@@ -1,18 +1,22 @@
+import java.util.Scanner;
+
 public class Game {
+
+    Scanner scanner = new Scanner(System.in);
 
     private char playerPawn = 'O';
     private char computerPawn = 'X';
 
-    private static char[][] board = new char[8][8];
+    private char[][] board = new char[8][8];
 
-    static void printBoard() {
-        System.out.println("    A   B   C   D   E   F   G   H");
+     void printBoard() {
+        System.out.println("    0   1   2   3   4   5   6   7");
         System.out.print("  ");
         for (int i = 0; i < 8; i++)
             System.out.print("+---");
         System.out.print("+\n");
         for (int i = 0; i < 8; i++) {
-            System.out.print((i + 1) + " ");
+            System.out.print((i) + " ");
             for (int j = 0; j < 8; j++) {
                 System.out.print("| " + board[i][j] + " ");
             }
@@ -38,6 +42,7 @@ public class Game {
                 }
         }
     }
+
     void locatePlayerPawns() {
         for (int i = 5; i < 8; i++) {
                 if (i % 2 == 0) {
@@ -53,4 +58,39 @@ public class Game {
                 }
         }
     }
+
+    void setEmptyFields() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(board[i][j] != 'X' && board[i][j] != 'O')
+                    board[i][j] = ' ';
+            }
+        }
+    }
+
+
+    void performMove(){
+        System.out.println("Which pawn you want to move?");
+        System.out.print("Select row: ");
+        int pawnRow = scanner.nextInt();
+        System.out.println();
+        System.out.print("Select column: ");
+        int pawnColumn = scanner.nextInt();
+        System.out.println();
+
+        System.out.println("Choose the field to move");
+        System.out.print("Select row: ");
+        int row = scanner.nextInt();
+        System.out.println();
+        System.out.print("Select column: ");
+        int column = scanner.nextInt();
+        System.out.println();
+        if(ifMovementValid(board[row][column])) // board 2 4
+            board[row][column] = 'O';
+    }
+
+    boolean ifMovementValid(char field){
+        return field == ' ';
+    }
+
 }
