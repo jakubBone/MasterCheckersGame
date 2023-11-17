@@ -3,11 +3,10 @@ import java.util.Scanner;
 public class Game {
 
     Scanner scanner = new Scanner(System.in);
-
-    private char playerPawn = 'O';
-    private char computerPawn = 'X';
-
-    private char[][] board = new char[8][8];
+    public int pawnNumbers;
+    static char[][] board = new char[8][8];
+    HumanPlayer player = new HumanPlayer();
+    ComputerPlayer computer = new ComputerPlayer();
 
      void printBoard() {
         System.out.println("    0   1   2   3   4   5   6   7");
@@ -31,12 +30,12 @@ public class Game {
         for (int i = 0; i < 3; i++) {
                 if (i % 2 == 0) {
                     for (int j = 0; j < 8; j++) {
-                        board[i][j] = computerPawn;
+                        board[i][j] = computer.PAWN;
                         j++;
                     }
                 } else {
                     for (int j = 1; j < 8; j++) {
-                        board[i][j] = computerPawn;
+                        board[i][j] = computer.PAWN;
                         j++;
                     }
                 }
@@ -47,12 +46,12 @@ public class Game {
         for (int i = 5; i < 8; i++) {
                 if (i % 2 == 0) {
                     for (int j = 0; j < 8; j++) {
-                        board[i][j] = playerPawn;
+                        board[i][j] = player.PAWN;
                         j++;
                     }
                 } else {
                     for (int j = 1; j < 8; j++) {
-                        board[i][j] = playerPawn;
+                        board[i][j] = player.PAWN;
                         j++;
                     }
                 }
@@ -62,35 +61,43 @@ public class Game {
     void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if(board[i][j] != 'X' && board[i][j] != 'O')
+                if(!(board[i][j] == 'X') && !(board[i][j] == 'O'))
                     board[i][j] = ' ';
             }
         }
     }
 
 
-    void performMove(){
-        System.out.println("Which pawn you want to move?");
-        System.out.print("Select row: ");
-        int pawnRow = scanner.nextInt();
-        System.out.println();
-        System.out.print("Select column: ");
-        int pawnColumn = scanner.nextInt();
-        System.out.println();
+    void performMove() {
+        while (true) {
+            System.out.println("Which pawn you want to move?");
+            System.out.print("Select row: ");
+            int pawnRow = scanner.nextInt();
+            System.out.println();
+            System.out.print("Select column: ");
+            int pawnColumn = scanner.nextInt();
+            System.out.println();
+            System.out.println(pawnRow + pawnColumn);
+            System.out.println("Choose the field to move");
+            System.out.print("Select row: ");
+            int movementRow = scanner.nextInt();
+            System.out.print("Select column: ");
+            int movementColumn = scanner.nextInt();
+            System.out.println();
 
-        System.out.println("Choose the field to move");
-        System.out.print("Select row: ");
-        int row = scanner.nextInt();
-        System.out.println();
-        System.out.print("Select column: ");
-        int column = scanner.nextInt();
-        System.out.println();
-        if(ifMovementValid(board[row][column])) // board 2 4
-            board[row][column] = 'O';
-    }
 
-    boolean ifMovementValid(char field){
-        return field == ' ';
+            i(movementRow == pawnRow - 1) && (movementColumn == pawnColumn -1 || movementColumn == pawnColumn + 1) ) {
+                board[movementRow][movementColumn] = 'O';
+                board[pawnRow][pawnColumn] = ' ';
+                printBoard();
+                break;
+
+            } else
+                System.out.println("Bad movement. Try Again");
+
+        }
     }
+    // isolate the if above to ifMovementValid() method
+    //(movementRow == pawnRow - 1) && (movementColumn == pawnColumn -1 || movementColumn == pawnColumn + 1) )
 
 }
