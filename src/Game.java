@@ -70,31 +70,31 @@ public class Game {
 
     void performMove() {
         while (true) {
-            System.out.println("Which pawn you want to move?");
-            System.out.print("Select row: ");
+            System.out.println("WHICH PAWN TO CHOOSE?");
+            System.out.print("Select pawn row: ");
             int pawnRow = scanner.nextInt();
-            System.out.println();
-            System.out.print("Select column: ");
+            System.out.print("Select pawn column: ");
             int pawnColumn = scanner.nextInt();
             System.out.println();
             System.out.println(pawnRow + pawnColumn);
-            System.out.println("Choose the field to move");
-            System.out.print("Select row: ");
-            int movementRow = scanner.nextInt();
-            System.out.print("Select column: ");
-            int movementColumn = scanner.nextInt();
-            System.out.println();
+            while (true) {
+                System.out.println("WHICH FIELD TO MOVE?");
+                System.out.print("Select field row: ");
+                int movementRow = scanner.nextInt();
+                System.out.print("Select field column: ");
+                int movementColumn = scanner.nextInt();
+                System.out.println();
+                if ((movementRow == pawnRow - 1) && (movementColumn == pawnColumn - 1 || movementColumn == pawnColumn + 1)) {
+                    board[movementRow][movementColumn] = 'O';
+                    board[pawnRow][pawnColumn] = ' ';
+                    printBoard();
+                    break;
 
+                } else
+                    System.out.println("Incorrect field. Please, select the field diagonally :) \n");
 
-            i(movementRow == pawnRow - 1) && (movementColumn == pawnColumn -1 || movementColumn == pawnColumn + 1) ) {
-                board[movementRow][movementColumn] = 'O';
-                board[pawnRow][pawnColumn] = ' ';
-                printBoard();
-                break;
-
-            } else
-                System.out.println("Bad movement. Try Again");
-
+            }
+            System.out.println("Play again");
         }
     }
     // isolate the if above to ifMovementValid() method
