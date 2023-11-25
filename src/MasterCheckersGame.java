@@ -6,6 +6,7 @@ public class MasterCheckersGame {
         game.setEmptyFields();
         game.printBoard();
         game.performMove();
+        game.printBoard();
 
 
 

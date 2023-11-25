@@ -75,25 +75,29 @@ public class Game {
             int pawnRow = scanner.nextInt();
             System.out.print("Select pawn column: ");
             int pawnColumn = scanner.nextInt();
-            System.out.println();
-            System.out.println(pawnRow + pawnColumn);
-            while (true) {
-                System.out.println("WHICH FIELD TO MOVE?");
-                System.out.print("Select field row: ");
-                int movementRow = scanner.nextInt();
-                System.out.print("Select field column: ");
-                int movementColumn = scanner.nextInt();
+            if(board[pawnRow][pawnColumn] == 'O'){
                 System.out.println();
-                if ((movementRow == pawnRow - 1) && (movementColumn == pawnColumn - 1 || movementColumn == pawnColumn + 1)) {
-                    board[movementRow][movementColumn] = 'O';
-                    board[pawnRow][pawnColumn] = ' ';
-                    printBoard();
-                    break;
+                while (true) {
+                    System.out.println("WHICH FIELD TO MOVE?");
+                    System.out.print("Select field row: ");
+                    int movementRow = scanner.nextInt();
+                    System.out.print("Select field column: ");
+                    int movementColumn = scanner.nextInt();
+                    System.out.println();
+                    if ((movementRow == pawnRow - 1) && (movementColumn == pawnColumn - 1 || movementColumn == pawnColumn + 1)) {
+                        board[movementRow][movementColumn] = 'O';
+                        board[pawnRow][pawnColumn] = ' ';
+                        printBoard();
+                        break;
 
-                } else
-                    System.out.println("Incorrect field. Please, select the field diagonally :) \n");
+                    } else
+                        System.out.println("Incorrect field. Please, select the field diagonally :) \n");
 
+                }
             }
+            else
+                System.out.println("Incorrect choice. It's not your pawn");
+
             System.out.println("Play again");
         }
     }

@@ -4,7 +4,6 @@ public class ComputerPlayer {
 
     static int pawnNumbers = 12;
 
+    // create computer movement logic
 
-    // computer movement logic
-    // try minimax algorithm, alfa-beta
 }
