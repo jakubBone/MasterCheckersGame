@@ -70,12 +70,14 @@ public class Game {
 
     void performMove() {
         while (true) {
+            printBoard();
             System.out.println("WHICH PAWN TO CHOOSE?");
             System.out.print("Select pawn row: ");
             int pawnRow = scanner.nextInt();
             System.out.print("Select pawn column: ");
             int pawnColumn = scanner.nextInt();
-            if(board[pawnRow][pawnColumn] == 'O'){
+
+            if(board[pawnRow][pawnColumn] == player.PAWN){
                 System.out.println();
                 while (true) {
                     System.out.println("WHICH FIELD TO MOVE?");
@@ -85,21 +87,25 @@ public class Game {
                     int movementColumn = scanner.nextInt();
                     System.out.println();
                     if ((movementRow == pawnRow - 1) && (movementColumn == pawnColumn - 1 || movementColumn == pawnColumn + 1)) {
-                        board[movementRow][movementColumn] = 'O';
+                        board[movementRow][movementColumn] = player.PAWN;
                         board[pawnRow][pawnColumn] = ' ';
-                        printBoard();
                         break;
-
+                    } else if (board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn -1 ] == computer.PAWN){
+                        board[movementRow][movementColumn] = player.PAWN;
+                        board[movementRow+1][movementColumn -1] = ' ';
+                        break;
                     } else
                         System.out.println("Incorrect field. Please, select the field diagonally :) \n");
-
                 }
             }
             else
                 System.out.println("Incorrect choice. It's not your pawn");
 
-            System.out.println("Play again");
+            System.out.println("Play again \n");
         }
+
+
+
     }
     // isolate the if above to ifMovementValid() method
     //(movementRow == pawnRow - 1) && (movementColumn == pawnColumn -1 || movementColumn == pawnColumn + 1) )
