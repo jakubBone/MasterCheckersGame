@@ -90,9 +90,13 @@ public class Game {
                         board[movementRow][movementColumn] = player.PAWN;
                         board[pawnRow][pawnColumn] = ' ';
                         break;
-                    } else if (board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn -1 ] == computer.PAWN){
+                    } else if (board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn -1 ] == computer.PAWN) {
                         board[movementRow][movementColumn] = player.PAWN;
-                        board[movementRow+1][movementColumn -1] = ' ';
+                        board[movementRow + 1][movementColumn - 1] = ' ';
+                        break;
+                    } else if(board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn + 1] == computer.PAWN){
+                        board[movementRow][movementColumn] = player.PAWN;
+                        board[movementRow + 1][movementColumn + 1] = ' ';
                         break;
                     } else
                         System.out.println("Incorrect field. Please, select the field diagonally :) \n");
