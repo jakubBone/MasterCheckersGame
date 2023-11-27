@@ -3,10 +3,11 @@ import java.util.Scanner;
 public class Game {
 
     Scanner scanner = new Scanner(System.in);
-    public int pawnNumbers;
     static char[][] board = new char[8][8];
     HumanPlayer player = new HumanPlayer();
     ComputerPlayer computer = new ComputerPlayer();
+
+    private char emptyField = ' ';
 
     static String currentPlayer = "Human";
 
@@ -63,8 +64,8 @@ public class Game {
     void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (!(board[i][j] == 'X') && !(board[i][j] == 'O'))
-                    board[i][j] = ' ';
+                if (!(board[i][j] == computer.PAWN) && !(board[i][j] == player.PAWN))
+                    board[i][j] = emptyField;
             }
         }
     }
@@ -99,7 +100,39 @@ public class Game {
     }
 
     void performMove(int movementX, int movementY, int pawnX, int pawnY) {
-        if (isMovementValid(pawnX, pawnY, movementX, movementY){
+        int moveLeft = pawnY - 1;
+        int moveRight = pawnY + 1;
+        int rowAbove =  pawnX - 1;
+        int transitionFieldX = movementX + 1
+        int transitionFieldY = movementY - 1
+
+        if (isMovementValid(pawnX, pawnY, movementX, movementY)){
+                if(movementX == rowAbove && (movementX == moveLeft || movementX == moveRight)) {
+                    board[movementX][movementY] = player.PAWN;
+                    board[pawnX][pawnY] = emptyField;
+                    System.out.println("0"); // flag 0
+                    currentPlayer = "Computer";
+                } else if (board[movementX][movementY] == emptyField) {
+                    if (board[transitionFieldX][transitionFieldY] == computer.PAWN) {
+                        board[movementX][movementY] = player.PAWN;
+                        board[pawnX][pawnY] = emptyField;
+                        board[transitionFieldX][transitionFieldY] = emptyField;
+                        System.out.println("1"); // flag 1
+                    } else if (board[movementX + 1][movementX + 1] == computer.PAWN) {
+                        board[movementX][movementY] = player.PAWN;
+                        board[transitionFieldX][transitionFieldY] = emptyField;
+                        System.out.println("2"); // flag 2
+                    }
+                    ComputerPlayer.compPawnNumbers -= 1;
+                    currentPlayer = "Computer";
+                }
+                else
+                    System.out.println("Incorrect field. Please, select the field diagonally :) \n");
+            }
+        }
+
+    /*void performMove(int movementX, int movementY, int pawnX, int pawnY) {
+        if (isMovementValid(pawnX, pawnY, movementX, movementY)){
                 if(movementX == pawnX - 1 && (movementX == pawnY - 1 || movementX == pawnY + 1)) {
                 board[movementX][movementY] = player.PAWN;
                 board[pawnX][pawnY] = ' ';
@@ -110,40 +143,17 @@ public class Game {
                     currentPlayer = "Computer";
                     if(board[movementX + 1][movementX - 1] == computer.PAWN){
                         board[movementX][movementY] = player.PAWN;
-                        board[pawnX][pawnY] = ' ';
+                        board[pawnX][pawnY] = emptyField;
                         board[movementX + 1][movementX - 1] = ' ';
                         System.out.println("1"); // flag
                     } else if(board[movementX + 1][movementX + 1] == computer.PAWN) {
                         board[movementX][movementY] = player.PAWN;
-                        board[movementX + 1][movementX + 1] = ' ';
+                        board[movementX + 1][movementX + 1] = emptyField;
                         System.out.println("2"); // flag
                 } else
                 System.out.println("Incorrect field. Please, select the field diagonally :) \n");
             }
         }
-    }
-
-    /*void performMove(int movementX, int movementY, int pawnX, int pawnY) {
-        if (isMovementValid(pawnX, pawnY, movementX, movementY) && movementX == pawnX - 1 && (movementX == pawnY - 1 || movementX == pawnY + 1)) {
-            board[movementX][movementY] = player.PAWN;
-            board[pawnX][pawnY] = ' ';
-            System.out.println("0"); // flag
-            currentPlayer = "Computer";
-        } else if (isMovementValid(pawnX, pawnY, movementX, movementY) && board[movementX][movementY] == ' ' && board[movementX + 1][movementX - 1] == computer.PAWN) {
-            board[movementX][movementY] = player.PAWN;
-            board[pawnX][pawnY] = ' ';
-            board[movementX + 1][movementX - 1] = ' ';
-            ComputerPlayer.compPawnNumbers -= 1;
-            currentPlayer = "Computer";
-            System.out.println("1"); // flag
-        } else if (isMovementValid(pawnX, pawnY, movementX, movementY) && board[movementX][movementY] == ' ' && board[movementX + 1][movementX + 1] == computer.PAWN) {
-            board[movementX][movementY] = player.PAWN;
-            board[movementX + 1][movementX + 1] = ' ';
-            System.out.println("2"); // flag
-            ComputerPlayer.compPawnNumbers -= 1;
-            currentPlayer = "Computer";
-        } else
-            System.out.println("Incorrect field. Please, select the field diagonally :) \n");
     }*/
 
     boolean isMovementValid(int pawnX, int pawnY, int movementX, int movementY) {
