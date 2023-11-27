@@ -99,6 +99,31 @@ public class Game {
     }
 
     void performMove(int movementX, int movementY, int pawnX, int pawnY) {
+        if (isMovementValid(pawnX, pawnY, movementX, movementY){
+                if(movementX == pawnX - 1 && (movementX == pawnY - 1 || movementX == pawnY + 1)) {
+                board[movementX][movementY] = player.PAWN;
+                board[pawnX][pawnY] = ' ';
+                System.out.println("0"); // flag
+                currentPlayer = "Computer";
+                } else if (board[movementX][movementY] == ' ') {
+                    ComputerPlayer.compPawnNumbers -= 1;
+                    currentPlayer = "Computer";
+                    if(board[movementX + 1][movementX - 1] == computer.PAWN){
+                        board[movementX][movementY] = player.PAWN;
+                        board[pawnX][pawnY] = ' ';
+                        board[movementX + 1][movementX - 1] = ' ';
+                        System.out.println("1"); // flag
+                    } else if(board[movementX + 1][movementX + 1] == computer.PAWN) {
+                        board[movementX][movementY] = player.PAWN;
+                        board[movementX + 1][movementX + 1] = ' ';
+                        System.out.println("2"); // flag
+                } else
+                System.out.println("Incorrect field. Please, select the field diagonally :) \n");
+            }
+        }
+    }
+
+    /*void performMove(int movementX, int movementY, int pawnX, int pawnY) {
         if (isMovementValid(pawnX, pawnY, movementX, movementY) && movementX == pawnX - 1 && (movementX == pawnY - 1 || movementX == pawnY + 1)) {
             board[movementX][movementY] = player.PAWN;
             board[pawnX][pawnY] = ' ';
@@ -119,7 +144,7 @@ public class Game {
             currentPlayer = "Computer";
         } else
             System.out.println("Incorrect field. Please, select the field diagonally :) \n");
-    }
+    }*/
 
     boolean isMovementValid(int pawnX, int pawnY, int movementX, int movementY) {
         return ((movementX >= pawnX - 2) && !(movementY == pawnY) ) ;
