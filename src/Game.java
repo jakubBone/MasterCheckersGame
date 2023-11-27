@@ -8,7 +8,9 @@ public class Game {
     HumanPlayer player = new HumanPlayer();
     ComputerPlayer computer = new ComputerPlayer();
 
-     void printBoard() {
+    static String currentPlayer = "Human";
+
+    void printBoard() {
         System.out.println("    0   1   2   3   4   5   6   7");
         System.out.print("  ");
         for (int i = 0; i < 8; i++)
@@ -28,48 +30,47 @@ public class Game {
 
     void locateComputerPawns() {
         for (int i = 0; i < 3; i++) {
-                if (i % 2 == 0) {
-                    for (int j = 0; j < 8; j++) {
-                        board[i][j] = computer.PAWN;
-                        j++;
-                    }
-                } else {
-                    for (int j = 1; j < 8; j++) {
-                        board[i][j] = computer.PAWN;
-                        j++;
-                    }
+            if (i % 2 == 0) {
+                for (int j = 0; j < 8; j++) {
+                    board[i][j] = computer.PAWN;
+                    j++;
                 }
+            } else {
+                for (int j = 1; j < 8; j++) {
+                    board[i][j] = computer.PAWN;
+                    j++;
+                }
+            }
         }
     }
 
     void locatePlayerPawns() {
         for (int i = 5; i < 8; i++) {
-                if (i % 2 == 0) {
-                    for (int j = 0; j < 8; j++) {
-                        board[i][j] = player.PAWN;
-                        j++;
-                    }
-                } else {
-                    for (int j = 1; j < 8; j++) {
-                        board[i][j] = player.PAWN;
-                        j++;
-                    }
+            if (i % 2 == 0) {
+                for (int j = 0; j < 8; j++) {
+                    board[i][j] = player.PAWN;
+                    j++;
                 }
+            } else {
+                for (int j = 1; j < 8; j++) {
+                    board[i][j] = player.PAWN;
+                    j++;
+                }
+            }
         }
     }
 
     void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if(!(board[i][j] == 'X') && !(board[i][j] == 'O'))
+                if (!(board[i][j] == 'X') && !(board[i][j] == 'O'))
                     board[i][j] = ' ';
             }
         }
     }
 
-
-    void performMove() {
-        while (true) {
+    void askForMove() {
+        while (ComputerPlayer.compPawnNumbers > 0 || HumanPlayer.playerPawnNumbers > 0) {
             printBoard();
             System.out.println("WHICH PAWN TO CHOOSE?");
             System.out.print("Select pawn row: ");
@@ -77,58 +78,53 @@ public class Game {
             System.out.print("Select pawn column: ");
             int pawnColumn = scanner.nextInt();
 
-
-            if(board[pawnRow][pawnColumn] == player.PAWN){
+            if (board[pawnRow][pawnColumn] == player.PAWN) {
                 System.out.println();
-                while (true) {
+                while (currentPlayer.equals("Human")) {
                     System.out.println("WHICH FIELD TO MOVE?");
                     System.out.print("Select field row: ");
                     int movementRow = scanner.nextInt();
                     System.out.print("Select field column: ");
                     int movementColumn = scanner.nextInt();
                     System.out.println();
-
-                        if ((movementRow == pawnRow - 1) && (movementColumn == pawnColumn - 1 || movementColumn == pawnColumn + 1)) {
-                            board[movementRow][movementColumn] = player.PAWN;
-                            board[pawnRow][pawnColumn] = ' ';
-                            System.out.println("0"); // flag
-                            break;
-                        } else if (board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn -1 ] == computer.PAWN) {
-                            board[movementRow][movementColumn] = player.PAWN;
-                            board[movementRow + 1][movementColumn - 1] = ' ';
-                            System.out.println("1"); // flag
-                            break;
-                        } else if(board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn + 1] == computer.PAWN){
-                            board[movementRow][movementColumn] = player.PAWN;
-                            board[movementRow + 1][movementColumn + 1] = ' ';
-                            System.out.println("2"); // flag
-                            break;
-                        } else
-                            System.out.println("Incorrect field. Please, select the field diagonally :) \n");
-                    }
-
-                    /*if ((movementRow == pawnRow - 1) && (movementColumn == pawnColumn - 1 || movementColumn == pawnColumn + 1)) {
-                        board[movementRow][movementColumn] = player.PAWN;
-                        board[pawnRow][pawnColumn] = ' ';
-                        System.out.println("0");
-                        break;
-                    } else if (board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn -1 ] == computer.PAWN) {
-                        board[movementRow][movementColumn] = player.PAWN;
-                        board[movementRow + 1][movementColumn - 1] = ' ';
-                        System.out.println("1");
-                        break;
-                    } else if(board[movementRow][movementColumn] == ' ' && board[movementRow + 1][movementColumn + 1] == computer.PAWN){
-                        board[movementRow][movementColumn] = player.PAWN;
-                        board[movementRow + 1][movementColumn + 1] = ' ';
-                        System.out.println("2");
-                        break;
-                    } else
-                        System.out.println("Incorrect field. Please, select the field diagonally :) \n");*/
+                    performMove(movementRow, movementColumn, pawnRow, pawnColumn);
                 }
-            }
-            else
+            } else
                 System.out.println("Incorrect choice. It's not your pawn");
+
+            // computerMove() y change player after movement
+            currentPlayer = "Human";
         }
+        System.out.println("Game over");
     }
-    // isolate the if above to ifMovementValid() method
+
+    void performMove(int movementX, int movementY, int pawnX, int pawnY) {
+        if (isMovementValid(pawnX, pawnY, movementX, movementY) && movementX == pawnX - 1 && (movementX == pawnY - 1 || movementX == pawnY + 1)) {
+            board[movementX][movementY] = player.PAWN;
+            board[pawnX][pawnY] = ' ';
+            System.out.println("0"); // flag
+            currentPlayer = "Computer";
+        } else if (isMovementValid(pawnX, pawnY, movementX, movementY) && board[movementX][movementY] == ' ' && board[movementX + 1][movementX - 1] == computer.PAWN) {
+            board[movementX][movementY] = player.PAWN;
+            board[pawnX][pawnY] = ' ';
+            board[movementX + 1][movementX - 1] = ' ';
+            ComputerPlayer.compPawnNumbers -= 1;
+            currentPlayer = "Computer";
+            System.out.println("1"); // flag
+        } else if (isMovementValid(pawnX, pawnY, movementX, movementY) && board[movementX][movementY] == ' ' && board[movementX + 1][movementX + 1] == computer.PAWN) {
+            board[movementX][movementY] = player.PAWN;
+            board[movementX + 1][movementX + 1] = ' ';
+            System.out.println("2"); // flag
+            ComputerPlayer.compPawnNumbers -= 1;
+            currentPlayer = "Computer";
+        } else
+            System.out.println("Incorrect field. Please, select the field diagonally :) \n");
+    }
+
+    boolean isMovementValid(int pawnX, int pawnY, int movementX, int movementY) {
+        return ((movementX >= pawnX - 2) && !(movementY == pawnY) ) ;
+    }
+
+    // use condition below
     //(movementRow == pawnRow - 1) && (movementColumn == pawnColumn -1 || movementColumn == pawnColumn + 1) )
+}

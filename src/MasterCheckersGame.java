@@ -6,8 +6,7 @@ public class MasterCheckersGame {
         game.locatePlayerPawns();
         game.setEmptyFields();
         Game.board[4][2] = c.PAWN; // added for test pawn capturing
-        game.performMove();
-        game.printBoard();
+        game.askForMove();
 
 
 
