@@ -92,7 +92,6 @@ public class Game {
                 }
             } else
                 System.out.println("Incorrect choice. It's not your pawn");
-
             // computerMove() y change player after movement
             currentPlayer = "Human";
         }
@@ -100,10 +99,23 @@ public class Game {
     }
 
     void performMove(int movementX, int movementY, int pawnX, int pawnY) {
+        if (isMovementValid(pawnX, pawnY, movementX, movementY)) {
+            if (isRowAboveSelected(pawnX, pawnY, movementX, movementY)) {
+                jumpToField(pawnX, pawnY, movementX, movementY);
+            } else if (isTwoRowsAboveSelected(pawnX, movementX, movementY)) {
+                capturePawn(pawnX, pawnY, movementX, movementY);
+            }
+        }
+        else
+            isMovementInvalid(pawnY, movementX, movementY);
+        currentPlayer = "Computer";
+    }
+
+    /*void performMove(int movementX, int movementY, int pawnX, int pawnY) {
         int moveLeft = pawnY - 1;
         int moveRight = pawnY + 1;
         int rowAbove = pawnX - 1;
-        int doubleRowAbove = pawnX - 2;
+        int twoRowAbove = pawnX - 2;
         int transitionFieldX = movementX + 1;
         int transitionFieldY = movementY - 1;
 
@@ -114,27 +126,97 @@ public class Game {
                 board[movementX][movementY] = player.PAWN;
                 board[pawnX][pawnY] = emptyField;
                 System.out.println("0"); // flag 0
-            } else if (movementX == doubleRowAbove && board[movementX][movementY] == emptyField) {
+            } else if (movementX == twoRowAbove && board[movementX][movementY] == emptyField && ) {
                 if (board[transitionFieldX][transitionFieldY] == computer.PAWN) {
                     board[movementX][movementY] = player.PAWN;
                     board[transitionFieldX][transitionFieldY] = emptyField;
                     board[pawnX][pawnY] = emptyField;
                     System.out.println("1"); // flag 1
-                } else
-                System.out.println("You cannot jump 2 field above");
+                }
+
             }
         } else
             if(!(board[movementX][movementY] == emptyField))
                 System.out.println("There is another pawn on the field. Please, try again");
             else
                 System.out.println("Incorrect field. Please, select the field diagonally :) \n");
-    }
+    }*/
 
-    boolean isMovementValid(int pawnX, int pawnY, int movementX, int movementY) {
+    /*boolean isMovementValid(int pawnX, int pawnY, int movementX, int movementY) {
         int doubleRowAbove = pawnX - 2;
         return ((movementX >= doubleRowAbove) && !(movementY == pawnY) && board[movementX][movementY] == emptyField);
+    }*/
+
+
+    void isMovementInvalid(int pawnY, int movementX, int movementY){
+        if(!(isMoveDiagonal(pawnY, movementY)))
+            System.out.println("The move is not diagonal");
+        else if(!(isSelectedFieldEmpty(movementX, movementY)))
+            System.out.println("The selected field is not empty");
+        else if (!(isEnemyOnTransition(movementX, movementY))) {
+            System.out.println("There is no enemy on transition field");
+        }
+        else if (!(isEnemyOnTransition(movementX, movementY)))
+            System.out.println("You can move only 1 row above ");
+    }
+    // START
+    boolean isMovementValid(int pawnX, int pawnY, int movementX, int movementY) {
+        int twoRowsAbove = pawnX - 2;
+        return ((movementX >= twoRowsAbove) && isMoveDiagonal(pawnY, movementY));
+    }
+    boolean isMoveDiagonal(int pawnY, int movementY) {
+        return (!(movementY == pawnY));
+    }
+    void jumpToField(int pawnX, int pawnY, int movementX, int movementY) {
+            if(isSelectedFieldEmpty(movementX, movementY)) {
+                board[movementX][movementY] = player.PAWN;
+                board[pawnX][pawnY] = emptyField;
+                System.out.println("0"); // flag 0
+            }
+            else
+                System.out.println("Field is not empty. Try again");
     }
 
-    // use condition below
-    //(movementRow == pawnRow - 1) && (movementColumn == pawnColumn -1 || movementColumn == pawnColumn + 1) )
+    boolean isRowAboveSelected(int pawnX, int pawnY, int movementX, int movementY) {
+        int moveLeft = pawnY - 1;
+        int moveRight = pawnY + 1;
+        int rowAbove = pawnX - 1;
+            return (isSelectedFieldEmpty(movementX, movementY) &&movementX == rowAbove &&
+                    (movementY == moveLeft || movementY == moveRight));
+    }
+    boolean isTwoRowsAboveSelected(int pawnX, int movementX, int movementY) {
+        int twoRowAbove = pawnX - 2;
+        return (movementX == twoRowAbove && isEnemyOnTransition(movementX, movementY));
+    }
+
+    void capturePawn(int pawnX, int pawnY, int movementX, int movementY) {
+        int transitionFieldX = movementX + 1;
+        int transitionFieldY = movementY - 1;
+        if(isSelectedFieldEmpty(movementX, movementY) && isEnemyOnTransition(movementX, movementY)){
+            board[movementX][movementY] = player.PAWN;
+            board[transitionFieldX][transitionFieldY] = emptyField;
+            board[pawnX][pawnY] = emptyField;
+            ComputerPlayer.compPawnNumbers -= 1;
+            System.out.println("1"); // flag 1
+        }
+        else
+            System.out.println("Selected field not empty or there is no enemy in transition. Try again");
+    }
+
+
+    boolean isSelectedFieldEmpty(int movementX, int movementY){
+        return (board[movementX][movementY] == emptyField);
+    }
+
+    /*boolean isTrasitionFieldEmpty(int pawnX, int pawnY, int movementX, int movementY) {
+
+    }*/
+
+    boolean isEnemyOnTransition( int movementX, int movementY) {
+        int transitionFieldX = movementX + 1;
+        int transitionFieldY = movementY - 1;
+        return (board[transitionFieldX][transitionFieldY] == computer.PAWN);
+    }
+
 }
+
