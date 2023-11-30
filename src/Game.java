@@ -12,7 +12,6 @@ public class Game {
             move.pawnRow = scanner.nextInt();
             System.out.print("Select pawn column: ");
             move.pawnColumn = scanner.nextInt();
-            System.out.println(move.pawnRow + move.pawnColumn); // check pawn
             if (Board.board[move.pawnRow][move.pawnColumn] == Player.playerPAWN) {
                 System.out.println();
                 while (Player.currentPlayer.equals("Human")) {
@@ -21,7 +20,6 @@ public class Game {
                     move.movementRow = scanner.nextInt();
                     System.out.print("Select field column: ");
                     move.movementColumn = scanner.nextInt();
-                    System.out.println(move.movementRow + move.movementColumn); // check pawn
                     System.out.println();
                     move.performMove();
                 }
