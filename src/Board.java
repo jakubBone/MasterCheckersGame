@@ -1,5 +1,5 @@
 public class Board {
-    static char[][] board = new char[8][8];
+    static char[][] board = new char[9][9];
     final static char emptyField = ' ';
 
     static void printBoard() {

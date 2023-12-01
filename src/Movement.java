@@ -9,40 +9,40 @@ public class Movement {
     void performMove() {
         setMovementDetails();
         if (isMovementValid()) {
-            System.out.println("isMovementValid()"); //
+            System.out.println("isMovementValid()"); // flag 1
             if (isRowAboveSelected()) {
-                System.out.println("isRowAboveSelected()"); //
+                System.out.println("isRowAboveSelected()"); // flag 2
                 jumpToField();
                 System.out.println("jumpToField()");
             } else if (areTwoRowsAboveSelected()) {
-                System.out.println("isTwoRowsAboveSelected()"); //
+                System.out.println("isTwoRowsAboveSelected()"); // flag 3
                 capturePawn();
-                System.out.println("capturePawn()"); //
+                System.out.println("capturePawn()"); // flag 4
             }
-        }
-        else {
+        } else {
             System.out.println("Invalid move!!!!!!!!!!!!!!!!");
             printMessageOfInvalidMove();
         }
         Player.currentPlayer = "Computer";
     }
 
-    void setMovementDetails(){
-        moveLeft = pawnColumn - 1; moveRight = pawnColumn + 1;
-        twoMovesLeft = pawnColumn - 2; twoMovesRight = pawnColumn + 2;
+    void setMovementDetails() {
+        moveLeft = pawnColumn - 1;
+        moveRight = pawnColumn + 1;
+        twoMovesLeft = pawnColumn - 2;
+        twoMovesRight = pawnColumn + 2;
         rowAbove = pawnRow - 1;
         twoRowsAbove = pawnRow - 2;
-        transitionColumnOnLeft = pawnColumn  - 1 ; transitionColumnOnRight = pawnColumn + 1;
+        transitionColumnOnLeft = pawnColumn - 1;
+        transitionColumnOnRight = pawnColumn + 1;
     }
 
-    void printMessageOfInvalidMove(){
-        if(!(isSelectedFieldEmpty()))
+    void printMessageOfInvalidMove() {
+        if (!(isSelectedFieldEmpty()))
             System.out.println("The selected field is not empty");
-        else if(!(isMovementUpward()))
+        else if (!(isMovementUpward()))
             System.out.println("Only upward movement is allowed");
-        else if (!(isEnemyOnTransition()))
-            System.out.println("There is no enemy on transition field");
-        else if(!(isMoveDiagonal()))
+        else if (!(isMoveDiagonal()))
             System.out.println("The move is not diagonal");
     }
 
@@ -52,44 +52,50 @@ public class Movement {
     }
 
     boolean isMovementValid() {
-        return (isMovementUpward() && isMoveDiagonal()  && isSelectedFieldEmpty());
+        return (isMovementUpward() && isMoveDiagonal() && isSelectedFieldEmpty());
     }
 
     boolean isMoveDiagonal() {
         return (!(movementColumn == pawnColumn) && !(movementRow == pawnRow));
     }
 
-    boolean isMovementUpward(){
+    boolean isMovementUpward() {
         return (isRowAboveSelected() || areTwoRowsAboveSelected());
     }
+
     boolean isRowAboveSelected() {
         return (movementRow == rowAbove && isMoveDiagonal() &&
                 (movementColumn == moveLeft || movementColumn == moveRight));
     }
+
     boolean areTwoRowsAboveSelected() {
         return (movementRow == twoRowsAbove && isMoveDiagonal() &&
                 (movementColumn == twoMovesLeft || movementColumn == twoMovesRight));
     }
 
-    boolean isSelectedFieldEmpty(){
+    boolean isSelectedFieldEmpty() {
         return (Board.board[movementRow][movementColumn] == Board.emptyField);
     }
-    boolean isEnemyOnTransition() {
-        return ((Board.board[rowAbove][transitionColumnOnLeft] == Player.computerPAWN) ||
-                (Board.board[rowAbove][transitionColumnOnRight] == Player.computerPAWN));
+
+    boolean isEnemyOnLeft() {
+        return (Board.board[rowAbove][transitionColumnOnLeft] == Player.computerPAWN);
+    }
+
+    boolean isEnemyOnRight() {
+        return (Board.board[rowAbove][transitionColumnOnRight] == Player.computerPAWN);
     }
 
     void capturePawn() {
-        if(isSelectedFieldEmpty() && isEnemyOnTransition()){
+        if (isEnemyOnLeft() || isEnemyOnRight()) {
             jumpToField();
-            if(Board.board[rowAbove][transitionColumnOnLeft] == Player.computerPAWN)
+            if (isEnemyOnLeft()) {
                 Board.board[rowAbove][transitionColumnOnLeft] = Board.emptyField;
-            else if (Board.board[rowAbove][transitionColumnOnRight] == Player.computerPAWN)
+            } else if (isEnemyOnRight()) {
                 Board.board[rowAbove][transitionColumnOnRight] = Board.emptyField;
+            }
             Player.compPawnNumbers -= 1;
         }
     }
-
 }
 
 
