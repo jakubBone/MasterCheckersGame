@@ -74,13 +74,7 @@ public class Movement {
     boolean isMovementUpward() {
         return (isRowAboveSelected() || areTwoRowsAboveSelected());
     }
-
-    /*boolean isMovementUpward() {
-        return (isRowAboveSelected() || areTwoRowsAboveSelected());
-    }*/
-
-
-
+    
     boolean isMovementInRange(){
         return (!(isMovementTooLow()) || !(isMovementTooHigh()))
     }
