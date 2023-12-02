@@ -5,6 +5,8 @@ public class Movement {
     int pawnColumn;
     int moveLeft;
     int moveRight;
+    int doubleMoveLeft;
+    int doubleMoveRight;
     int rowAbovePawn;
     int twoRowsAbovePawn;
     int transitionColumnOnLeft;
@@ -31,6 +33,8 @@ public class Movement {
     }
 
     void setMovementDetails() {
+        doubleMoveLeft = pawnColumn - 1;
+        doubleMoveRight = pawnColumn + 1;
         moveLeft = pawnColumn - 2;
         moveRight = pawnColumn + 2;
         rowAbovePawn = pawnRow - 1;
@@ -74,10 +78,6 @@ public class Movement {
     boolean isMovementUpward() {
         return (isRowAboveSelected() || areTwoRowsAboveSelected());
     }
-    
-    boolean isMovementInRange(){
-        return (!(isMovementTooLow()) || !(isMovementTooHigh()))
-    }
     boolean isMovementTooLow() {
         return (movementRow > twoRowsAbovePawn);
     }
@@ -86,13 +86,14 @@ public class Movement {
     }
 
     boolean isRowAboveSelected() {
-        return (movementRow == rowAbovePawn);
+        return (movementRow == rowAbovePawn &&
+                (movementColumn == moveLeft || movementColumn == moveRight));
     }
     boolean areTwoRowsAboveSelected() {
         return (movementRow == twoRowsAbovePawn && (isEnemyOnLeft() || isEnemyOnRight())
                 && (movementColumn == moveLeft || movementColumn == moveRight));
-
     }
+
 
     boolean isSelectedFieldEmpty() {
         return (Board.board[movementRow][movementColumn] == Board.emptyField);
