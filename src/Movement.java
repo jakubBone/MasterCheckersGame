@@ -2,10 +2,8 @@ public class Movement {
     int movementRow; int movementColumn;
     int pawnRow; int pawnColumn;
     int moveLeft; int moveRight;
-    int rowAbove;
-    int twoRowsAbove;
-    int transitionColumnOnLeft;
-    int transitionColumnOnRight;
+    int rowAbove; int twoRowsAbove;
+    int transitionColumnOnLeft; int transitionColumnOnRight;
 
     void performMove() {
         setMovementDetails();
@@ -35,7 +33,10 @@ public class Movement {
         transitionColumnOnLeft = pawnColumn - 1;
         transitionColumnOnRight = pawnColumn + 1;
     }
-
+    void jumpToField() {
+        Board.board[movementRow][movementColumn] = Player.playerPAWN;
+        Board.board[pawnRow][pawnColumn] = Board.emptyField;
+    }
     void printMessageOfInvalidMove() {
         if (!(isSelectedFieldEmpty()))
             System.out.println("The selected field is not empty");
@@ -47,10 +48,7 @@ public class Movement {
             System.out.println("Any enemy pawn on transition field");
     }
 
-    void jumpToField() {
-        Board.board[movementRow][movementColumn] = Player.playerPAWN;
-        Board.board[pawnRow][pawnColumn] = Board.emptyField;
-    }
+
 
     boolean isMovementValid() {
         return (isMovementUpward() && isMoveDiagonal() && isSelectedFieldEmpty());
