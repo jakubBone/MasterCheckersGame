@@ -33,10 +33,10 @@ public class Movement {
     }
 
     void setMovementDetails() {
-        doubleMoveLeft = pawnColumn - 1;
-        doubleMoveRight = pawnColumn + 1;
-        moveLeft = pawnColumn - 2;
-        moveRight = pawnColumn + 2;
+        moveLeft = pawnColumn - 1;
+        moveRight = pawnColumn + 1;
+        doubleMoveLeft = pawnColumn - 2;
+        doubleMoveRight = pawnColumn + 2;
         rowAbovePawn = pawnRow - 1;
         twoRowsAbovePawn = pawnRow - 2;
         transitionColumnOnLeft = pawnColumn - 1;
@@ -89,16 +89,15 @@ public class Movement {
         return (movementRow == rowAbovePawn &&
                 (movementColumn == moveLeft || movementColumn == moveRight));
     }
+
     boolean areTwoRowsAboveSelected() {
         return (movementRow == twoRowsAbovePawn && (isEnemyOnLeft() || isEnemyOnRight())
                 && (movementColumn == moveLeft || movementColumn == moveRight));
     }
 
-
     boolean isSelectedFieldEmpty() {
         return (Board.board[movementRow][movementColumn] == Board.emptyField);
     }
-
 
     boolean isEnemyOnLeft() {
         return (Board.board[rowAbovePawn][transitionColumnOnLeft] == Player.computerPAWN
