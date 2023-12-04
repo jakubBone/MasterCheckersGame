@@ -54,10 +54,10 @@ public class Movement {
             else if (!(isMoveDiagonal()))
                     System.out.println("The move is not diagonal");
             else
-                System.out.println("???");
+                System.out.println("Invalid move");
     }
 
-    /boolean isMovementValid() {
+    boolean isMovementValid() {
         return (isMoveUpward() && isMoveDiagonal() && isSelectedFieldEmpty());
     }
 
@@ -110,6 +110,8 @@ public class Movement {
                 jumpToField();
                 Player.compPawnNumbers -= 1;
             }
+            else
+                System.out.println("There is no enemy pawn in the transition field");
     }
 }
 
