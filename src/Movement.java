@@ -9,8 +9,6 @@ public class Movement {
     int doubleMoveRight;
     int rowAbovePawn;
     int twoRowsAbovePawn;
-    int transitionColumnOnLeft;
-    int transitionColumnOnRight;
 
     void performMove() {
         setMovementDetails();
@@ -39,8 +37,6 @@ public class Movement {
         doubleMoveRight = pawnColumn + 2;
         rowAbovePawn = pawnRow - 1;
         twoRowsAbovePawn = pawnRow - 2;
-        transitionColumnOnLeft = pawnColumn - 1;
-        transitionColumnOnRight = pawnColumn + 1;
     }
 
     void jumpToField() {
@@ -49,40 +45,35 @@ public class Movement {
     }
 
     void printMessageOfInvalidMove() {
-        if (isRowAboveSelected()) {
-            if (!(isMoveDiagonal()))
-                System.out.println("The move is not diagonal");
-            else if (!(isSelectedFieldEmpty()))
-                System.out.println("The selected field is not empty");
-        } else if ((areTwoRowsAboveSelected())) { // tutaj w ogóle nie wchodzi przy wyborze 3/4
-            if (!(isEnemyOnLeft()) || !(isEnemyOnRight()))
-                System.out.println("Any enemy pawn on transition field");
-            else if (!(isSelectedFieldEmpty()))
-                System.out.println("The selected field is not empty");
-        } else {
             if (isMovementTooHigh())
                 System.out.println("The movement is too high");
             else if (isMovementTooLow())
                 System.out.println("Only upward movement is allowed");
-        }
+            else if (!(isSelectedFieldEmpty()))
+                System.out.println("The selected field is not empty");
+            else if (!(isMoveDiagonal()))
+                    System.out.println("The move is not diagonal");
+            else
+                System.out.println("???");
     }
 
-    boolean isMovementValid() {
-        return (isMovementUpward() && isMoveDiagonal() && isSelectedFieldEmpty());
+    /boolean isMovementValid() {
+        return (isMoveUpward() && isMoveDiagonal() && isSelectedFieldEmpty());
     }
 
     boolean isMoveDiagonal() {
         return (!(movementColumn == pawnColumn) && !(movementRow == pawnRow));
     }
 
-    boolean isMovementUpward() {
+    boolean isMoveUpward() {
         return (isRowAboveSelected() || areTwoRowsAboveSelected());
     }
+
     boolean isMovementTooLow() {
-        return (movementRow > twoRowsAbovePawn);
+        return (movementRow >= pawnRow);
     }
     boolean isMovementTooHigh() {
-        return (movementRow < pawnRow);
+        return (movementRow < twoRowsAbovePawn);
     }
 
     boolean isRowAboveSelected() {
@@ -91,8 +82,8 @@ public class Movement {
     }
 
     boolean areTwoRowsAboveSelected() {
-        return (movementRow == twoRowsAbovePawn && (isEnemyOnLeft() || isEnemyOnRight())
-                && (movementColumn == doubleMoveLeft || movementColumn == doubleMoveRight));
+        return (movementRow == twoRowsAbovePawn &&
+                (movementColumn == doubleMoveLeft || movementColumn == doubleMoveRight));
     }
 
     boolean isSelectedFieldEmpty() {
@@ -100,23 +91,25 @@ public class Movement {
     }
 
     boolean isEnemyOnLeft() {
-        return (Board.board[rowAbovePawn][transitionColumnOnLeft] == Player.computerPAWN
+        return (Board.board[rowAbovePawn][moveLeft] == Player.computerPAWN
                 && movementColumn == doubleMoveLeft);
     }
 
     boolean isEnemyOnRight() {
-        return (Board.board[rowAbovePawn][transitionColumnOnRight] == Player.computerPAWN
+        return (Board.board[rowAbovePawn][moveRight] == Player.computerPAWN
                 && movementColumn == doubleMoveRight);
     }
 
     void capturePawn() {
-            jumpToField();
-            if (isEnemyOnLeft()) {
-                Board.board[rowAbovePawn][transitionColumnOnLeft] = Board.emptyField;
-            } else if (isEnemyOnRight()) {
-                Board.board[rowAbovePawn][transitionColumnOnRight] = Board.emptyField;
+            if (isEnemyOnLeft() && movementColumn >=0) {
+                Board.board[rowAbovePawn][moveLeft] = Board.emptyField;
+                jumpToField();
+                Player.compPawnNumbers -= 1;
+            } else if (isEnemyOnRight() && movementColumn <=8) {
+                Board.board[rowAbovePawn][moveRight] = Board.emptyField;
+                jumpToField();
+                Player.compPawnNumbers -= 1;
             }
-            Player.compPawnNumbers -= 1;
     }
 }
 
