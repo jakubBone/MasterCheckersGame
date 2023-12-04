@@ -92,7 +92,7 @@ public class Movement {
 
     boolean areTwoRowsAboveSelected() {
         return (movementRow == twoRowsAbovePawn && (isEnemyOnLeft() || isEnemyOnRight())
-                && (movementColumn == moveLeft || movementColumn == moveRight));
+                && (movementColumn == doubleMoveLeft || movementColumn == doubleMoveRight));
     }
 
     boolean isSelectedFieldEmpty() {
@@ -101,12 +101,12 @@ public class Movement {
 
     boolean isEnemyOnLeft() {
         return (Board.board[rowAbovePawn][transitionColumnOnLeft] == Player.computerPAWN
-                && movementColumn == moveLeft);
+                && movementColumn == doubleMoveLeft);
     }
 
     boolean isEnemyOnRight() {
         return (Board.board[rowAbovePawn][transitionColumnOnRight] == Player.computerPAWN
-                && movementColumn == moveRight);
+                && movementColumn == doubleMoveRight);
     }
 
     void capturePawn() {
