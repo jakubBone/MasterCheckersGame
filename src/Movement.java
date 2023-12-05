@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Movement {
     int movementRow;
     int movementColumn;
@@ -9,6 +11,40 @@ public class Movement {
     int doubleMoveRightColumn;
     int rowAbovePawn;
     int twoRowsAbovePawn;
+
+    Scanner scanner = new Scanner(System.in);
+
+    void askForMove() {
+        while (Player.compPawnNumbers > 0 || Player.playerPawnNumbers > 0) {
+            Board.printBoard();
+            System.out.println("WHICH PAWN TO CHOOSE?");
+            System.out.print("Select pawn row: ");
+            pawnRow = scanner.nextInt();
+            System.out.print("Select pawn column: ");
+            pawnColumn = scanner.nextInt();
+            if (ifPlayerPawnSelected()) {
+                System.out.println();
+                while (Player.currentPlayer.equals("Human")) {
+                    System.out.println("WHICH FIELD TO MOVE?");
+                    System.out.print("Select field row: ");
+                    movementRow = scanner.nextInt();
+                    System.out.print("Select field column: ");
+                    movementColumn = scanner.nextInt();
+                    System.out.println();
+                    performMove();
+                }
+            } else
+                System.out.println("Incorrect choice. It's not your pawn");
+            // computerMove() y change player after movement
+            Player.currentPlayer = "Human";
+        }
+        System.out.println("Game over");
+    }
+
+    boolean ifPlayerPawnSelected() {
+        return (Board.board[pawnRow][pawnColumn] == Player.playerPAWN ||
+                Board.board[pawnRow][pawnColumn] == Player.playerQueenPawn);
+    }
 
     void performMove() {
         setMovementDetails();
