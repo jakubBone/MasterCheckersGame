@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Game {
     Scanner scanner = new Scanner(System.in);
     Movement move = new Movement();
+    Board board = new Board();
 
     void askForMove() {
         while (Player.compPawnNumbers > 0 || Player.playerPawnNumbers > 0) {
@@ -12,7 +13,7 @@ public class Game {
             move.pawnRow = scanner.nextInt();
             System.out.print("Select pawn column: ");
             move.pawnColumn = scanner.nextInt();
-            if (Board.board[move.pawnRow][move.pawnColumn] == Player.playerPAWN) {
+            if (ifPlayerPawnSelected()) {
                 System.out.println();
                 while (Player.currentPlayer.equals("Human")) {
                     System.out.println("WHICH FIELD TO MOVE?");
@@ -30,6 +31,10 @@ public class Game {
         }
         System.out.println("Game over");
     }
+    boolean ifPlayerPawnSelected() {
+        return (Board.board[move.pawnRow][move.pawnColumn] == Player.playerPAWN ||
+                Board.board[move.pawnRow][move.pawnColumn] == Player.playerQueenPawn);
 
+    }
 }
 

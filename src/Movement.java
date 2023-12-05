@@ -40,8 +40,14 @@ public class Movement {
     }
 
     void jumpToField() {
-        Board.board[movementRow][movementColumn] = Player.playerPAWN;
         Board.board[pawnRow][pawnColumn] = Board.emptyField;
+        if(movementRow == 0)
+            setQueen();
+        else
+            Board.board[movementRow][movementColumn] = Player.playerPAWN;
+    }
+    void setQueen(){
+            Board.board[movementRow][movementColumn] = Player.playerQueenPawn;
     }
 
     void printMessageOfInvalidMove() {

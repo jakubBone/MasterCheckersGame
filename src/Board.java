@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Board {
     static char[][] board = new char[9][9];
     final static char emptyField = ' ';
