@@ -3,10 +3,10 @@ public class Movement {
     int movementColumn;
     int pawnRow;
     int pawnColumn;
-    int moveLeft;
-    int moveRight;
-    int doubleMoveLeft;
-    int doubleMoveRight;
+    int moveLeftColumn;
+    int moveRightColumn;
+    int doubleMoveLeftColumn;
+    int doubleMoveRightColumn;
     int rowAbovePawn;
     int twoRowsAbovePawn;
 
@@ -31,10 +31,10 @@ public class Movement {
     }
 
     void setMovementDetails() {
-        moveLeft = pawnColumn - 1;
-        moveRight = pawnColumn + 1;
-        doubleMoveLeft = pawnColumn - 2;
-        doubleMoveRight = pawnColumn + 2;
+        moveLeftColumn = pawnColumn - 1;
+        moveRightColumn = pawnColumn + 1;
+        doubleMoveLeftColumn = pawnColumn - 2;
+        doubleMoveRightColumn = pawnColumn + 2;
         rowAbovePawn = pawnRow - 1;
         twoRowsAbovePawn = pawnRow - 2;
     }
@@ -78,12 +78,12 @@ public class Movement {
 
     boolean isRowAboveSelected() {
         return (movementRow == rowAbovePawn &&
-                (movementColumn == moveLeft || movementColumn == moveRight));
+                (movementColumn == moveLeftColumn || movementColumn == moveRightColumn));
     }
 
     boolean areTwoRowsAboveSelected() {
         return (movementRow == twoRowsAbovePawn &&
-                (movementColumn == doubleMoveLeft || movementColumn == doubleMoveRight));
+                (movementColumn == doubleMoveLeftColumn || movementColumn == doubleMoveRightColumn));
     }
 
     boolean isSelectedFieldEmpty() {
@@ -91,22 +91,22 @@ public class Movement {
     }
 
     boolean isEnemyOnLeft() {
-        return (Board.board[rowAbovePawn][moveLeft] == Player.computerPAWN
-                && movementColumn == doubleMoveLeft);
+        return (Board.board[rowAbovePawn][moveLeftColumn] == Player.computerPAWN
+                && movementColumn == doubleMoveLeftColumn);
     }
 
     boolean isEnemyOnRight() {
-        return (Board.board[rowAbovePawn][moveRight] == Player.computerPAWN
-                && movementColumn == doubleMoveRight);
+        return (Board.board[rowAbovePawn][moveRightColumn] == Player.computerPAWN
+                && movementColumn == doubleMoveRightColumn);
     }
 
     void capturePawn() {
             if (isEnemyOnLeft() && movementColumn >=0) {
-                Board.board[rowAbovePawn][moveLeft] = Board.emptyField;
+                Board.board[rowAbovePawn][moveLeftColumn] = Board.emptyField;
                 jumpToField();
                 Player.compPawnNumbers -= 1;
             } else if (isEnemyOnRight() && movementColumn <=8) {
-                Board.board[rowAbovePawn][moveRight] = Board.emptyField;
+                Board.board[rowAbovePawn][moveRightColumn] = Board.emptyField;
                 jumpToField();
                 Player.compPawnNumbers -= 1;
             }
