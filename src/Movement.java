@@ -31,7 +31,8 @@ public class Movement {
                     System.out.print("Select field column: ");
                     movementColumn = scanner.nextInt();
                     System.out.println();
-                    performMove();
+                    //performMove();
+                    performGeneralMove();
                 }
             } else
                 System.out.println("Incorrect choice. It's not your pawn");
@@ -41,10 +42,54 @@ public class Movement {
         System.out.println("Game over");
     }
 
+    ///////////////////////////////
     boolean ifPlayerPawnSelected() {
         return (Board.board[pawnRow][pawnColumn] == Player.playerPAWN ||
                 Board.board[pawnRow][pawnColumn] == Player.playerQueenPawn);
     }
+
+    void performGeneralMove() {
+        if (isQueenMoveValid()) {
+            performQueenMove();
+            System.out.println("performed the Queen move");
+        }
+        else {
+        performMove();
+        System.out.println("performed the Queen move");
+        }
+    }
+    void performQueenMove(){
+            if(isQueenMoveValid())
+                jumpToField();
+            else
+                printMessageOfInvalidQueenMove();
+
+    }
+    boolean isQueenMoveValid(){
+        return isSelectedFieldEmpty() && isEnemyOnQueenRoad() && isQueenMoveInRange();
+    }
+
+    boolean isEnemyOnQueenRoad(){
+        return (Board.board[movementRow + 1][movementColumn] == 'X' ||
+                Board.board[movementRow][movementColumn - 1] == 'X');
+
+    }
+    boolean isQueenMoveInRange(){
+        return ((movementRow >=0 && movementRow <= 8) || (movementColumn >=0 && movementColumn <=8));
+    }
+
+    void printMessageOfInvalidQueenMove() {
+        if (!(isSelectedFieldEmpty()))
+            System.out.println("The selected field is not empty");
+        else if (!(isEnemyOnQueenRoad()))
+            System.out.println("There is no enemy on Queen road");
+        else if(!(isQueenMoveInRange()))
+            System.out.println("Movement out of the range");
+        else
+            System.out.println("Invalid move");
+    }
+    ///////////////////////////////////////////
+
 
     void performMove() {
         setMovementDetails();
@@ -65,6 +110,26 @@ public class Movement {
         }
         Player.currentPlayer = "Computer";
     }
+
+    /*void performMove() {
+        setMovementDetails();
+        if (isMovementValid()) {
+            System.out.println("Flag isMovementValid()"); // flag 1
+            if (isRowAboveSelected()) {
+                System.out.println("Flag isRowAboveSelected()"); // flag 2
+                jumpToField();
+                System.out.println("Flag jumpToField()");
+            } else if (areTwoRowsAboveSelected()) {
+                System.out.println("Flag isTwoRowsAboveSelected()"); // flag 3
+                capturePawn();
+                System.out.println("Flag capturePawn()"); // flag 4
+            }
+        } else {
+            System.out.println("Flag Error"); // error flag
+            printMessageOfInvalidMove();
+        }
+        Player.currentPlayer = "Computer";
+    }*/
 
     void setMovementDetails() {
         moveLeftColumn = pawnColumn - 1;
