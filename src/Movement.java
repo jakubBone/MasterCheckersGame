@@ -31,7 +31,6 @@ public class Movement {
                     System.out.print("Select field column: ");
                     movementColumn = scanner.nextInt();
                     System.out.println();
-                    //performMove();
                     performGeneralMove();
                 }
             } else
@@ -45,12 +44,24 @@ public class Movement {
     ///////////////////////////////
 
     boolean ifPlayerPawnSelected(){
-        return (ifNormalPawnSelected() || ifQueenSelected());
+        return (ifPawnSelected() || ifQueenSelected());
     }
     boolean isQueenMovementValid(){
-        return isSelectedFieldEmpty() && isMoveDiagonal();
+        return isSelectedFieldEmpty() && isQueenMovementDiagonal();
     }
-    boolean ifNormalPawnSelected(){
+
+    boolean isQueenMovementDiagonal(){
+        boolean isDiagonal = false;
+        if((movementRow / movementColumn) == (pawnRow + 1 / pawnColumn  + 1) ||
+                (movementRow / movementColumn) == (pawnRow + 1 / pawnColumn  - 1) ||
+                    (movementRow / movementColumn) == (pawnRow - 1 / pawnColumn  - 1) ||
+                        (movementRow / movementColumn) == (pawnRow - 1 / pawnColumn  + 1)) {
+            isDiagonal = true;
+        }
+        return isDiagonal;
+    }
+
+    boolean ifPawnSelected(){
         return Board.board[pawnRow][pawnColumn] == Player.playerPAWN;
     }
     boolean ifQueenSelected(){
@@ -58,16 +69,32 @@ public class Movement {
     }
 
     void performGeneralMove() {
+        setMovementDetails();
         if (ifQueenSelected()) {
             performQueenMove();
             System.out.println("Queen move performed");
-        } else if(ifNormalPawnSelected()){
+        } else if(ifPawnSelected()){
             performMove();
-            System.out.println("Pawn move performend");
+            System.out.println("Pawn move performed");
         }
     }
 
     void performQueenMove(){
+            if(isQueenMovementValid()) {
+                if(isEnemyOnQueenRoad()){
+                    capturePawn();
+                }
+                else {
+                    System.out.println("Flag QueenMovementValid()"); // flag 1
+                    jumpQueenToField();
+                    System.out.println("Flag jumpQueenToField()");
+                }
+            }
+            else
+                printMessageOfInvalidQueenMove();
+        Player.currentPlayer = "Computer";
+    }
+    /*void performQueenMove(){
             if(isQueenMovementValid()) {
                 System.out.println("Flag QueenMovementValid()"); // flag 1
                 jumpQueenToField();
@@ -76,7 +103,7 @@ public class Movement {
             else
                 printMessageOfInvalidQueenMove();
         Player.currentPlayer = "Computer";
-    }
+    }*/
 
 
     boolean isEnemyOnQueenRoad(){
@@ -92,11 +119,12 @@ public class Movement {
         else
             System.out.println("Invalid move");
     }
+
     ///////////////////////////////////////////
 
 
     void performMove() {
-        setMovementDetails();
+        //setMovementDetails();
         if (isMovementValid()) {
             System.out.println("Flag isMovementValid()"); // flag 1
             if (isRowAboveSelected()) {
@@ -139,13 +167,6 @@ public class Movement {
         Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
     }
 
-    /*void jumpToField() {
-        Board.board[pawnRow][pawnColumn] = Board.emptyField;
-        if(movementRow == 0)
-            setQueen();
-        else
-            Board.board[movementRow][movementColumn] = Player.playerPAWN;
-    }*/
     void setQueen(){
             Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
     }
@@ -196,28 +217,47 @@ public class Movement {
         return (Board.board[movementRow][movementColumn] == Board.emptyField);
     }
 
-    boolean isEnemyOnLeft() {
+    boolean isEnemyOnPawnLeft() {
         return (Board.board[rowAbovePawn][moveLeftColumn] == Player.computerPAWN
                 && movementColumn == doubleMoveLeftColumn);
     }
 
-    boolean isEnemyOnRight() {
+    boolean isEnemyOnPawnRight() {
         return (Board.board[rowAbovePawn][moveRightColumn] == Player.computerPAWN
                 && movementColumn == doubleMoveRightColumn);
     }
 
     void capturePawn() {
-            if (isEnemyOnLeft() && movementColumn >=0) {
+        if (ifPawnSelected()){
+            if (isEnemyOnPawnLeft() && movementColumn >= 0) {
                 Board.board[rowAbovePawn][moveLeftColumn] = Board.emptyField;
                 jumpToField();
                 Player.compPawnNumbers -= 1;
-            } else if (isEnemyOnRight() && movementColumn <=8) {
+            } else if (isEnemyOnPawnRight() && movementColumn <= 8) {
                 Board.board[rowAbovePawn][moveRightColumn] = Board.emptyField;
                 jumpToField();
                 Player.compPawnNumbers -= 1;
-            }
-            else
+            } else
                 System.out.println("There is no enemy pawn in the transition field");
+        }
+        else if (ifQueenSelected()){
+            if(isEnemyOnQueenRoad() && movementColumn >= 0 && movementColumn <=8){
+                Board.board[rowAbovePawn][moveRightColumn] = Board.emptyField;
+                jumpQueenToField();
+                Player.compPawnNumbers -=1
+            }
+        }
+    }
+    void capturePawnWithQueen() {
+        int nextQueenRow = pawnRow + 1;
+        int nextQueenColumn = pawnColumn + 1;
+        int
+        for (int i = nextQueenRow; i <= movementRow; i++)
+            for (int j = nextQueenColumn; j < movementColumn; j++) {
+                if (Board.board[nextQueenRow][nextQueenColumn] = "X")
+                    Board.board[nextQueenRow][nextQueenColumn] = Board.emptyField;
+
+            }
     }
 }
 
