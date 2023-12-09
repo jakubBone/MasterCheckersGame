@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Movement {
@@ -43,28 +44,33 @@ public class Movement {
 
     ///////////////////////////////
 
-    boolean ifPlayerPawnSelected(){
-        return (ifPawnSelected() || ifQueenSelected());
-    }
-    boolean isQueenMovementValid(){
+
+    boolean isQueenMovementValid() {
         return isSelectedFieldEmpty() && isQueenMovementDiagonal();
     }
 
-    boolean isQueenMovementDiagonal(){
+    boolean isQueenMovementDiagonal() {
+        System.out.println("In isQueenMoveDiagonal"); // Flag isQueenMovediagonal
         boolean isDiagonal = false;
-        if((movementRow / movementColumn) == (pawnRow + 1 / pawnColumn  + 1) ||
-                (movementRow / movementColumn) == (pawnRow + 1 / pawnColumn  - 1) ||
-                    (movementRow / movementColumn) == (pawnRow - 1 / pawnColumn  - 1) ||
-                        (movementRow / movementColumn) == (pawnRow - 1 / pawnColumn  + 1)) {
-            isDiagonal = true;
-        }
+        System.out.println("Once");
+        if (movementColumn != 0) {
+            if ((movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn + 1)) ||
+                    (movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn - 1)) ||
+                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn - 1)) ||
+                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn + 1))) {
+                isDiagonal = true;
+                System.out.println("Out isQueenMoveDiagonal");
+            }
+        } else
+            System.out.println("Exception");
         return isDiagonal;
     }
 
-    boolean ifPawnSelected(){
+    boolean ifPawnSelected() {
         return Board.board[pawnRow][pawnColumn] == Player.playerPAWN;
     }
-    boolean ifQueenSelected(){
+
+    boolean ifQueenSelected() {
         return Board.board[pawnRow][pawnColumn] == Player.playerQueenPAWN;
     }
 
@@ -73,55 +79,94 @@ public class Movement {
         if (ifQueenSelected()) {
             performQueenMove();
             System.out.println("Queen move performed");
-        } else if(ifPawnSelected()){
+        } else if (ifPawnSelected()) {
             performMove();
             System.out.println("Pawn move performed");
         }
     }
 
-    void performQueenMove(){
-            if(isQueenMovementValid()) {
-                if(isEnemyOnQueenRoad()){
-                    capturePawn();
-                }
-                else {
-                    System.out.println("Flag QueenMovementValid()"); // flag 1
-                    jumpQueenToField();
-                    System.out.println("Flag jumpQueenToField()");
-                }
+    void performQueenMove() {
+        System.out.println("In performQueenMove");
+        if (isQueenMovementValid()) {
+            System.out.println("Flag QueenMovementValid()"); // flag 1
+            jumpQueenToField();
+            System.out.println("Flag jumpQueenToField()"); // flag 2
+            if (isEnemyOnQueenRoad()) {
+                System.out.println("Flag isEnemyOnQueenRoad()");
+                capturePawnWithQueen();
+                System.out.println("Flag capturePawn();");
             }
-            else
-                printMessageOfInvalidQueenMove();
+        } else
+            System.out.println("Message Invalid");
+        //printMessageOfInvalidQueenMove();
         Player.currentPlayer = "Computer";
     }
-    /*void performQueenMove(){
-            if(isQueenMovementValid()) {
-                System.out.println("Flag QueenMovementValid()"); // flag 1
-                jumpQueenToField();
-                System.out.println("Flag jumpQueenToField()");
+
+    boolean isEnemyOnQueenRoad() {
+        for (int i = Math.min(pawnRow, movementRow) + 1; i < Math.max(pawnRow, movementRow); i++) {
+            for (int j = Math.min(pawnColumn, movementColumn) + 1; j < Math.max(pawnColumn, movementColumn); j++) {
+                if (Board.board[i][j] == 'X') {
+                    return true;
+                }
             }
-            else
-                printMessageOfInvalidQueenMove();
-        Player.currentPlayer = "Computer";
-    }*/
-
-
-    boolean isEnemyOnQueenRoad(){
-        return (Board.board[movementRow + 1][movementColumn] == 'X' ||
-                Board.board[movementRow][movementColumn - 1] == 'X');
+        }
+        return false;
     }
+
 
     void printMessageOfInvalidQueenMove() {
-        if (!(isSelectedFieldEmpty()))
+        if(!isQueenMovementValid())
+            System.out.println("Queen move not valid");
+        else if (!(isSelectedFieldEmpty()))
             System.out.println("The selected field is not empty");
         else if (!(isEnemyOnQueenRoad()))
             System.out.println("There is no enemy on Queen road");
         else
             System.out.println("Invalid move");
     }
+    void capturePawn() {
+        System.out.println("In capturePawn");
+            if (isEnemyOnPawnLeft() && movementColumn >= 0) {
+                Board.board[rowAbovePawn][moveLeftColumn] = Board.emptyField;
+                jumpToField();
+                Player.compPawnNumbers -= 1;
+            } else if (isEnemyOnPawnRight() && movementColumn <= 8) {
+                Board.board[rowAbovePawn][moveRightColumn] = Board.emptyField;
+                jumpToField();
+                Player.compPawnNumbers -= 1;
+            } else
+                System.out.println("There is no enemy pawn in the transition field");
+        System.out.println("out capturePawn");
+    }
 
+    void capturePawnWithQueen(){
+        System.out.println("Flag in capturePawnWithQueen");
+        for (int i = Math.min(pawnRow, movementRow) + 1; i < Math.max(pawnRow, movementRow); i++) {
+            for (int j = Math.min(pawnColumn, movementColumn) + 1; j < Math.max(pawnColumn, movementColumn); j++){
+
+                if (Board.board[i][j] != Board.emptyField && Board.board[i][j] != Player.playerPAWN) {
+                    Board.board[i][j] = Board.emptyField;
+                }
+            }
+        }
+            Player.compPawnNumbers -= 1;
+        System.out.println("Flag in capturePawnWithQueen");
+    }
+
+    void jumpQueenToField() {
+        Board.board[pawnRow][pawnColumn] = Board.emptyField;
+        Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
+    }
+
+    void setQueen() {
+        Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
+    }
     ///////////////////////////////////////////
 
+
+    boolean ifPlayerPawnSelected() {
+        return (ifPawnSelected() || ifQueenSelected());
+    }
 
     void performMove() {
         //setMovementDetails();
@@ -156,32 +201,25 @@ public class Movement {
     void jumpToField() {
         Board.board[pawnRow][pawnColumn] = Board.emptyField;
         System.out.println("przed pętlą");
-            if(movementRow == 0)
-                setQueen();
-            else
-                Board.board[movementRow][movementColumn] = Player.playerPAWN;
+        if (movementRow == 0)
+            setQueen();
+        else
+            Board.board[movementRow][movementColumn] = Player.playerPAWN;
     }
 
-    void jumpQueenToField() {
-        Board.board[pawnRow][pawnColumn] = Board.emptyField;
-        Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
-    }
 
-    void setQueen(){
-            Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
-    }
 
     void printMessageOfInvalidMove() {
-            if (isMovementTooHigh())
-                System.out.println("The movement is too high");
-            else if (isMovementTooLow())
-                System.out.println("Only upward movement is allowed");
-            else if (!(isSelectedFieldEmpty()))
-                System.out.println("The selected field is not empty");
-            else if (!(isMoveDiagonal()))
-                    System.out.println("The move is not diagonal");
-            else
-                System.out.println("Invalid move");
+        if (isMovementTooHigh())
+            System.out.println("The movement is too high");
+        else if (isMovementTooLow())
+            System.out.println("Only upward movement is allowed");
+        else if (!(isSelectedFieldEmpty()))
+            System.out.println("The selected field is not empty");
+        else if (!(isMoveDiagonal()))
+            System.out.println("The move is not diagonal");
+        else
+            System.out.println("Invalid move");
     }
 
     boolean isMovementValid() {
@@ -199,6 +237,7 @@ public class Movement {
     boolean isMovementTooLow() {
         return (movementRow >= pawnRow);
     }
+
     boolean isMovementTooHigh() {
         return (movementRow < twoRowsAbovePawn);
     }
@@ -226,39 +265,7 @@ public class Movement {
         return (Board.board[rowAbovePawn][moveRightColumn] == Player.computerPAWN
                 && movementColumn == doubleMoveRightColumn);
     }
-
-    void capturePawn() {
-        if (ifPawnSelected()){
-            if (isEnemyOnPawnLeft() && movementColumn >= 0) {
-                Board.board[rowAbovePawn][moveLeftColumn] = Board.emptyField;
-                jumpToField();
-                Player.compPawnNumbers -= 1;
-            } else if (isEnemyOnPawnRight() && movementColumn <= 8) {
-                Board.board[rowAbovePawn][moveRightColumn] = Board.emptyField;
-                jumpToField();
-                Player.compPawnNumbers -= 1;
-            } else
-                System.out.println("There is no enemy pawn in the transition field");
-        }
-        else if (ifQueenSelected()){
-            if(isEnemyOnQueenRoad() && movementColumn >= 0 && movementColumn <=8){
-                Board.board[rowAbovePawn][moveRightColumn] = Board.emptyField;
-                jumpQueenToField();
-                Player.compPawnNumbers -=1
-            }
-        }
-    }
-    void capturePawnWithQueen() {
-        int nextQueenRow = pawnRow + 1;
-        int nextQueenColumn = pawnColumn + 1;
-        int
-        for (int i = nextQueenRow; i <= movementRow; i++)
-            for (int j = nextQueenColumn; j < movementColumn; j++) {
-                if (Board.board[nextQueenRow][nextQueenColumn] = "X")
-                    Board.board[nextQueenRow][nextQueenColumn] = Board.emptyField;
-
-            }
-    }
 }
+
 
 
