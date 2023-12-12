@@ -49,17 +49,10 @@ public class Movement {
     }
 
     boolean isQueenMovementDiagonal() {
-        System.out.println("In isQueenMoveDiagonal"); // Flag isQueenMovediagonal
-        boolean isDiagonal = false;
-        System.out.println("Once");
-            if ((movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn + 1)) ||
-                    (movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn - 1)) ||
-                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn - 1)) ||
-                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn + 1))) {
-                isDiagonal = true;
-                System.out.println("Out isQueenMoveDiagonal");
-            }
-        return isDiagonal;
+        int rowDifference = Math.abs(movementRow - pawnRow);
+        int colDifference = Math.abs(movementColumn - pawnColumn);
+
+        return rowDifference == colDifference;
     }
 
 
