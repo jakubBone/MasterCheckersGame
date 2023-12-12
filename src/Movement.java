@@ -42,8 +42,7 @@ public class Movement {
         System.out.println("Game over");
     }
 
-    ///////////////////////////////
-
+    /////// Queen Logic ////
 
     boolean isQueenMovementValid() {
         return isSelectedFieldEmpty() && isQueenMovementDiagonal();
@@ -62,22 +61,7 @@ public class Movement {
             }
         return isDiagonal;
     }
-    /*boolean isQueenMovementDiagonal() {
-        System.out.println("In isQueenMoveDiagonal"); // Flag isQueenMovediagonal
-        boolean isDiagonal = false;
-        System.out.println("Once");
-        if (movementColumn != 0) {
-            if ((movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn + 1)) ||
-                    (movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn - 1)) ||
-                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn - 1)) ||
-                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn + 1))) {
-                isDiagonal = true;
-                System.out.println("Out isQueenMoveDiagonal");
-            }
-        } else
-            System.out.println("Exception");
-        return isDiagonal;
-    }*/
+
 
     boolean ifPawnSelected() {
         return Board.board[pawnRow][pawnColumn] == Player.playerPAWN;
@@ -127,16 +111,6 @@ public class Movement {
     }
 
 
-    void printMessageOfInvalidQueenMove() {
-        if(!isQueenMovementValid())
-            System.out.println("Queen move not valid");
-        else if (!(isSelectedFieldEmpty()))
-            System.out.println("The selected field is not empty");
-        else if (!(isEnemyOnQueenRoad()))
-            System.out.println("There is no enemy on Queen road");
-        else
-            System.out.println("Invalid move");
-    }
     void capturePawn() {
         System.out.println("In capturePawn");
             if (isEnemyOnPawnLeft() && movementColumn >= 0) {
@@ -174,7 +148,7 @@ public class Movement {
     void setQueen() {
         Board.board[movementRow][movementColumn] = Player.playerQueenPAWN;
     }
-    ///////////////////////////////////////////
+
 
 
     boolean ifPlayerPawnSelected() {
@@ -219,8 +193,6 @@ public class Movement {
         else
             Board.board[movementRow][movementColumn] = Player.playerPAWN;
     }
-
-
 
     void printMessageOfInvalidMove() {
         if (isMovementTooHigh())
