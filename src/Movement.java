@@ -53,6 +53,19 @@ public class Movement {
         System.out.println("In isQueenMoveDiagonal"); // Flag isQueenMovediagonal
         boolean isDiagonal = false;
         System.out.println("Once");
+            if ((movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn + 1)) ||
+                    (movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn - 1)) ||
+                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn - 1)) ||
+                    (movementRow / movementColumn) == ((pawnRow - 1) / (pawnColumn + 1))) {
+                isDiagonal = true;
+                System.out.println("Out isQueenMoveDiagonal");
+            }
+        return isDiagonal;
+    }
+    /*boolean isQueenMovementDiagonal() {
+        System.out.println("In isQueenMoveDiagonal"); // Flag isQueenMovediagonal
+        boolean isDiagonal = false;
+        System.out.println("Once");
         if (movementColumn != 0) {
             if ((movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn + 1)) ||
                     (movementRow / movementColumn) == ((pawnRow + 1) / (pawnColumn - 1)) ||
@@ -64,7 +77,7 @@ public class Movement {
         } else
             System.out.println("Exception");
         return isDiagonal;
-    }
+    }*/
 
     boolean ifPawnSelected() {
         return Board.board[pawnRow][pawnColumn] == Player.playerPAWN;
