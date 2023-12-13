@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Board {
     static char[][] board = new char[9][9];
     final static char emptyField = ' ';
@@ -26,12 +24,12 @@ public class Board {
         for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
                 for (int j = 0; j < 8; j++) {
-                    board[i][j] = Player.computerPAWN;
+                    board[i][j] = Computer.computerPAWN;
                     j++;
                 }
             } else {
                 for (int j = 1; j < 8; j++) {
-                    board[i][j] = Player.computerPAWN;
+                    board[i][j] = Computer.computerPAWN;
                     j++;
                 }
             }
@@ -57,7 +55,7 @@ public class Board {
     void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (!(board[i][j] == Player.computerPAWN) && !(board[i][j] == Player.playerPAWN))
+                if (!(board[i][j] == Computer.computerPAWN) && !(board[i][j] == Player.playerPAWN))
                     board[i][j] = emptyField;
             }
         }
