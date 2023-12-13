@@ -17,6 +17,8 @@ public class Player {
     static String currentPlayer = "Human";
     Scanner scanner = new Scanner(System.in);
 
+    Computer computer = new Computer();
+
     void askForMove() {
         while (Computer.compPawnNumbers > 0 || playerPawnNumbers > 0) {
             Board.printBoard();
@@ -38,7 +40,7 @@ public class Player {
                 }
             } else
                 System.out.println("Incorrect choice. It's not your pawn");
-            // computerMove() y change player after movement
+            computer.performMove();
             currentPlayer = "Human";
         }
         System.out.println("Game over");
