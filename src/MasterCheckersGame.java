@@ -2,6 +2,8 @@ public class MasterCheckersGame {
     public static void main(String[] args) {
         Board board = new Board();
         Player movement = new Player();
+
+        GameLogic gameLogic = new GameLogic();
         board.locateComputerPawns();
         board.locatePlayerPawns();
         board.setEmptyFields();
@@ -20,7 +22,7 @@ public class MasterCheckersGame {
 
 
 
-        movement.askForMove();
+        gameLogic.askForMove();
 
 
 

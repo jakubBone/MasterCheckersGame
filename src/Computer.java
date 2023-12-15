@@ -51,7 +51,7 @@ public class Computer {
             } else
                 printMessageOfInvalidMove();
         }
-        Player.currentPlayer = "Computer";
+        GameLogic.currentPlayer = "Computer";
     }
     void printMessageOfInvalidMove(){
         System.out.println("Error");
