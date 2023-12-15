@@ -30,9 +30,7 @@ public class Player {
     }
     void performPawnMove() {
         if (isPawnMoveValid()) {
-            System.out.println("y");
             if (isRowAbovePawnSelected()) {
-                System.out.println("z");
                 jumpToField();
             } else if (areTwoRowsAbovePawnSelected()) {
                 capturePawn();
