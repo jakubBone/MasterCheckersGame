@@ -49,10 +49,10 @@ public class Computer {
 
                         capturePawn(compPawnRow, compPawnColumn, rowBelow, twoRowsBelow, playerColumn,
                                 jumpedColumn);
-                        if(GameLogic.currentPlayer.equals("Humman")){
+                        if(GameLogic.currentPlayer.equals("Human")){
                             break;
                         }
-                        System.out.println("dupa");
+                        System.out.println("XYZ");
                     }
 
                 }
@@ -67,11 +67,16 @@ public class Computer {
             Board.board[rowBelow][playerColumn] = Board.emptyField;
             Board.board[twoRowsBelow][jumpedField] = Computer.computerPAWN;
             Player.playerPawnNumbers -= 1;
-            GameLogic.currentPlayer = "Humman";
+            GameLogic.currentPlayer = "Human";
         }
-        else
+        else{
+            jumpToField(compPawnRow, compPawnColumn, rowBelow);
             System.out.println("Risk of capture");
+        }
+
+
     }
+
     void jumpToField(int compPawnRow, int compPawnColumn, int rowBelow) {
         Random random = new Random();
         int column1 = compPawnColumn - 1;
