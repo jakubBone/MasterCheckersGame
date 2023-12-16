@@ -34,6 +34,21 @@ public class Computer {
 
         return jumpedColumn;
     }
+
+    boolean evaluateBestMove(int compPawnRow, int compPawnColumn, int twoRowBelow) {
+        int rowBelow = compPawnRow + 1;
+        int playerColumn = getPlayerColumn(compPawnRow, compPawnColumn);
+        int jumpedColumn = getJumpedColumn(playerColumn, rowBelow);
+
+        if (!ifRiskOfCapturePossible(rowBelow, playerColumn) &&
+                Board.board[rowBelow][jumpedColumn] == Board.emptyField) {
+            capturePawn(compPawnRow, compPawnColumn, rowBelow, twoRowBelow, playerColumn, jumpedColumn);
+            return true;
+        } else {
+            jumpToField(compPawnRow, compPawnColumn, rowBelow);
+            return true;
+        }
+    }
     void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
@@ -41,31 +56,23 @@ public class Computer {
                     System.out.println(i + " / " + j);
                     int compPawnRow = i;
                     int compPawnColumn = j;
-                    int rowBelow = compPawnRow + 1;
-                    int twoRowsBelow = compPawnRow + 2;
-                    if(compPawnRow >= 2 && compPawnRow <= 5 && compPawnColumn >= 2 && compPawnColumn <=5){
-                        int playerColumn = getPlayerColumn(i, j);
-                        int jumpedColumn = getJumpedColumn(playerColumn, rowBelow);
 
-                        capturePawn(compPawnRow, compPawnColumn, rowBelow, twoRowsBelow, playerColumn,
-                                jumpedColumn);
-                        if(GameLogic.currentPlayer.equals("Human")){
-                            break;
+                    if (compPawnRow >= 2 && compPawnRow <= 5 && compPawnColumn >= 2 && compPawnColumn <= 5) {
+                        if (evaluateBestMove(compPawnRow, compPawnColumn, compPawnRow + 2)) {
+                            return;
                         }
-                        System.out.println("XYZ");
                     }
-
                 }
             }
         }
     }
     void capturePawn(int compPawnRow, int compPawnColumn,int rowBelow, int twoRowsBelow,
-                     int playerColumn, int jumpedField){
+                     int playerColumn, int jumpedColumn){
         if(!ifRiskOfCapturePossible(rowBelow, playerColumn) &&
-                Board.board[rowBelow][jumpedField] == Board.emptyField){
+                Board.board[rowBelow][jumpedColumn] == Board.emptyField){
             Board.board[compPawnRow][compPawnColumn] = Board.emptyField;
             Board.board[rowBelow][playerColumn] = Board.emptyField;
-            Board.board[twoRowsBelow][jumpedField] = Computer.computerPAWN;
+            Board.board[twoRowsBelow][jumpedColumn] = Computer.computerPAWN;
             Player.playerPawnNumbers -= 1;
             GameLogic.currentPlayer = "Human";
         }
