@@ -27,7 +27,7 @@ public class GameLogic {
                 }
             } else
                 System.out.println("Incorrect choice. It's not your pawn");
-            computer.move();
+            computer.findPawnAndMove();
             currentPlayer = "Human";
         }
         System.out.println("Game over");
