@@ -1,18 +1,19 @@
 public class Player {
-    int movementRow;
-    int movementColumn;
-    int pawnRow;
-    int pawnColumn;
-    int leftUp;
-    int rightUp;
-    int leftUpAfterCapture;
-    int rightUpAfterCapture;
-    int rowAbovePawn;
-    int twoRowsAbovePawn;
+    public int movementRow;
+    public int movementColumn;
+    public int pawnRow;
+    public int pawnColumn;
+    private int leftUp;
+    private int rightUp;
+    private int leftUpAfterCapture;
+    private int rightUpAfterCapture;
+    private int rowAbovePawn;
+    private int twoRowsAbovePawn;
     final static char playerPAWN  = 'O';
     static int playerPawnNumbers = 12;
     final static char playerQueenPAWN = '@';
-    void performMove() {
+
+    public void performMove() {
         setFieldsDetials();
         if (ifQueenSelected()) {
             performQueenMove();
@@ -28,7 +29,7 @@ public class Player {
         rowAbovePawn = pawnRow - 1;
         twoRowsAbovePawn = pawnRow - 2;
     }
-    void performPawnMove() {
+    private void performPawnMove() {
         if (isPawnMoveValid()) {
             if (isRowAbovePawnSelected()) {
                 jumpToField();
@@ -40,7 +41,7 @@ public class Player {
         }
         GameLogic.currentPlayer = "Computer";
     }
-    void performQueenMove() {
+    private void performQueenMove() {
         if (isQueenMoveValid()) {
             jumpQueenToField();
             if (isEnemyOnQueenRoad()) {
@@ -52,7 +53,7 @@ public class Player {
         }
         GameLogic.currentPlayer = "Computer";
     }
-    void capturePawn() {
+    private void capturePawn() {
             if (isEnemyOnPawnRoad(leftUp, leftUpAfterCapture) && movementColumn >= 0) {
                 captureEnemyPawn(rowAbovePawn, leftUp);
             } else if (isEnemyOnPawnRoad(rightUp, rightUpAfterCapture) && movementColumn <= 8) {
@@ -60,12 +61,12 @@ public class Player {
             } else
                 System.out.println("There is no enemy pawn in the transition field");
     }
-    void captureEnemyPawn(int row, int column){
+    private void captureEnemyPawn(int row, int column){
         Board.board[row][column] = Board.emptyField;
         jumpToField();
         Computer.compPawnNumbers -= 1;
     }
-    void capturePawnWithQueen(){
+    private void capturePawnWithQueen(){
         for (int i = Math.min(pawnRow, movementRow) + 1; i < Math.max(pawnRow, movementRow); i++) {
             for (int j = Math.min(pawnColumn, movementColumn) + 1; j < Math.max(pawnColumn, movementColumn); j++){
                 if (Board.board[i][j] != Board.emptyField && Board.board[i][j] != playerPAWN) {
@@ -75,7 +76,7 @@ public class Player {
         }
             Computer.compPawnNumbers -= 1;
     }
-    boolean isEnemyOnQueenRoad() {
+    private boolean isEnemyOnQueenRoad() {
         for (int i = Math.min(pawnRow, movementRow) + 1; i < Math.max(pawnRow, movementRow); i++) {
             for (int j = Math.min(pawnColumn, movementColumn) + 1; j < Math.max(pawnColumn, movementColumn); j++) {
                 if (Board.board[i][j] == 'X') {
@@ -85,18 +86,18 @@ public class Player {
         }
         return false;
     }
-    void jumpToField() {
+    private void jumpToField() {
         Board.board[pawnRow][pawnColumn] = Board.emptyField;
         if (movementRow == 0)
             Board.board[movementRow][movementColumn] = playerQueenPAWN;
         else
             Board.board[movementRow][movementColumn] = playerPAWN;
     }
-    void jumpQueenToField() {
+    private void jumpQueenToField() {
         Board.board[pawnRow][pawnColumn] = Board.emptyField;
         Board.board[movementRow][movementColumn] = playerQueenPAWN;
     }
-    void printMessageOfInvalidMove() {
+    private void printMessageOfInvalidMove() {
         if (isPawnMoveTooHigh())
             System.out.println("The movement is too high");
         else if (!(isMoveUpward()))
@@ -108,7 +109,7 @@ public class Player {
         else
             System.out.println("Invalid move");
     }
-    void printMessageOfInvalidQueenMove() {
+    private void printMessageOfInvalidQueenMove() {
         if (!(isQueenMoveDiagonal()))
             System.out.println("The move is not diagonal");
         else if (!(isSelectedFieldEmpty()))
@@ -116,47 +117,47 @@ public class Player {
         else
             System.out.println("Invalid move");
     }
-    boolean isPawnMoveValid() {
+    private boolean isPawnMoveValid() {
         return (isMoveUpward() && isPawnMoveDiagonal() && isSelectedFieldEmpty());
     }
-    boolean isQueenMoveValid() {
+    private boolean isQueenMoveValid() {
         return isSelectedFieldEmpty() && isQueenMoveDiagonal();
     }
-    boolean isPawnMoveDiagonal() {
+    private boolean isPawnMoveDiagonal() {
         return (!(movementColumn == pawnColumn) && !(movementRow == pawnRow));
     }
-    boolean isQueenMoveDiagonal() {
+    private boolean isQueenMoveDiagonal() {
         int rowDifference = Math.abs(movementRow - pawnRow);
         int colDifference = Math.abs(movementColumn - pawnColumn);
         return rowDifference == colDifference;
     }
-    boolean isSelectedFieldEmpty() {
+    private boolean isSelectedFieldEmpty() {
         return (Board.board[movementRow][movementColumn] == Board.emptyField);
     }
     boolean ifPlayerPawnSelected() {
         return (ifPawnSelected() || ifQueenSelected());
     }
-    boolean ifPawnSelected() {
+    private boolean ifPawnSelected() {
         return Board.board[pawnRow][pawnColumn] == playerPAWN;
     }
-    boolean ifQueenSelected() {
+    private boolean ifQueenSelected() {
         return Board.board[pawnRow][pawnColumn] == playerQueenPAWN;
     }
-    boolean isMoveUpward() {
+    private boolean isMoveUpward() {
         return (isRowAbovePawnSelected() || areTwoRowsAbovePawnSelected());
     }
-    boolean isPawnMoveTooHigh() {
+    private boolean isPawnMoveTooHigh() {
         return (movementRow < twoRowsAbovePawn);
     }
-    boolean isRowAbovePawnSelected() {
+    private boolean isRowAbovePawnSelected() {
         return (movementRow == rowAbovePawn &&
                 (movementColumn == leftUp || movementColumn == rightUp));
     }
-    boolean areTwoRowsAbovePawnSelected() {
+    private boolean areTwoRowsAbovePawnSelected() {
         return (movementRow == twoRowsAbovePawn &&
                 (movementColumn == leftUpAfterCapture || movementColumn == rightUpAfterCapture));
     }
-    boolean isEnemyOnPawnRoad(int diagonalUp, int jumpedField){
+    private boolean isEnemyOnPawnRoad(int diagonalUp, int jumpedField){
         return (Board.board[rowAbovePawn][diagonalUp] == Computer.computerPAWN
                 && movementColumn == jumpedField);
     }

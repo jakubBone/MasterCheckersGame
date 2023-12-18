@@ -5,7 +5,7 @@ public class Computer {
     static int compPawnNumbers = 12;
     final static char computerQueenPawn = '#';
 
-    void findPawnAndMove() {
+    public void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
                 if (Board.board[i][j] == computerPAWN) {
@@ -21,7 +21,7 @@ public class Computer {
             }
         }
     }
-    void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
+    private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
         int playerColumn = getPlayerColumn(rowBelow, compColumn);
         int jumpedColumn = getJumpedColumn(playerColumn, compColumn);
 
@@ -36,7 +36,7 @@ public class Computer {
 
     }
 
-    int getPlayerColumn(int rowBelow, int compColumn) {
+    private int getPlayerColumn(int rowBelow, int compColumn) {
         int playerColumn = 0;
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
@@ -48,7 +48,7 @@ public class Computer {
         return playerColumn;
     }
 
-    int getJumpedColumn(int playerColumn, int compColumn){
+    private int getJumpedColumn(int playerColumn, int compColumn){
         int jumpedColumn = 0;
         if(playerColumn == compColumn - 1)
             jumpedColumn = compColumn - 2;
@@ -58,7 +58,7 @@ public class Computer {
         return jumpedColumn;
     }
 
-    boolean ifRiskOfCapture(int twoRowsBelow, int playerColumn, int compColumn){
+    private boolean ifRiskOfCapture(int twoRowsBelow, int playerColumn, int compColumn){
         int jumpedColumn = getJumpedColumn(playerColumn, compColumn);
 
         int riskyOnLeft = compColumn - 2;
@@ -73,7 +73,7 @@ public class Computer {
     }
 
 
-    void capturePawn(int compRow, int compColumn,int rowBelow, int twoRowsBelow,
+    private void capturePawn(int compRow, int compColumn,int rowBelow, int twoRowsBelow,
                      int playerColumn, int jumpedColumn){
             Board.board[compRow][compColumn] = Board.emptyField;
             Board.board[rowBelow][playerColumn] = Board.emptyField;
@@ -81,7 +81,7 @@ public class Computer {
             Player.playerPawnNumbers -= 1;
             GameLogic.currentPlayer = "Human";
     }
-    void jumpToField(int compRow, int compColumn, int rowBelow) {
+    private void jumpToField(int compRow, int compColumn, int rowBelow) {
         Random random = new Random();
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;

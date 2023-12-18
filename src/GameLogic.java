@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class GameLogic {
     Scanner scanner = new Scanner(System.in);
-    static String currentPlayer = "Human";
+    public static String currentPlayer = "Human";
     Computer computer = new Computer();
     Player player = new Player();
 

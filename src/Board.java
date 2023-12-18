@@ -1,8 +1,8 @@
 public class Board {
-    static char[][] board = new char[9][9];
+    final static char[][] board = new char[9][9];
     final static char emptyField = ' ';
 
-    static void printBoard() {
+    public static void printBoard() {
         System.out.println("    0   1   2   3   4   5   6   7");
         System.out.print("  ");
         for (int i = 0; i < 8; i++)
@@ -20,7 +20,12 @@ public class Board {
         }
     }
 
-    void locateComputerPawns() {
+    public void prepareBoard(){
+        locatePlayerPawns();
+        locateComputerPawns();
+        setEmptyFields();
+    }
+    private void locateComputerPawns() {
         for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
                 for (int j = 0; j < 8; j++) {
@@ -36,7 +41,7 @@ public class Board {
         }
     }
 
-    void locatePlayerPawns() {
+    private void locatePlayerPawns() {
         for (int i = 5; i < 8; i++) {
             if (i % 2 == 0) {
                 for (int j = 0; j < 8; j++) {
@@ -52,7 +57,7 @@ public class Board {
         }
     }
 
-    void setEmptyFields() {
+    private void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (!(board[i][j] == Computer.computerPAWN) && !(board[i][j] == Player.playerPAWN))

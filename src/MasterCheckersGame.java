@@ -1,13 +1,9 @@
 public class MasterCheckersGame {
     public static void main(String[] args) {
         Board board = new Board();
-        Player movement = new Player();
-        Computer computer = new Computer();
 
         GameLogic gameLogic = new GameLogic();
-        board.locateComputerPawns();
-        board.locatePlayerPawns();
-        board.setEmptyFields();
+        board.prepareBoard();
         /*Board.board[4][2] = Computer.computerPAWN; // Player added to test pawn capturing
         Board.board[1][1] = Board.emptyField; // added to Player test pawn capturing
         Board.board[0][2] = Board.emptyField; // added to Player test pawn capturing
@@ -22,8 +18,6 @@ public class MasterCheckersGame {
         Board.board[2][0] = ' ' ; // added to Computer test pawn capturing*/
 
         gameLogic.askForMove();
-
-
 
     }
 }
