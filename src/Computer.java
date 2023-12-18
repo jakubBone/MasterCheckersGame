@@ -5,6 +5,7 @@ public class Computer {
     static int compPawnNumbers = 12;
     final static char computerQueenPawn = '#';
 
+
     public void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
@@ -12,7 +13,6 @@ public class Computer {
                     System.out.println(i + " / " + j);
                     int compRow = i;
                     int compColumn = j;
-
                     if (compRow >= 2 && compRow <= 5 && compColumn >= 2 && compColumn <= 5) {
                         performBestMove(compRow, compColumn, compRow + 1, compRow + 2);
                         return;
@@ -21,20 +21,21 @@ public class Computer {
             }
         }
     }
-    private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
+
+     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
         int playerColumn = getPlayerColumn(rowBelow, compColumn);
-        int jumpedColumn = getJumpedColumn(playerColumn, compColumn);
+        int jumpedColumn = getAfterCaptureColumn(playerColumn, compColumn);
 
-        if (!ifRiskOfCapture(twoRowBelow, playerColumn, compColumn) &&
-                Board.board[rowBelow][jumpedColumn] == Board.emptyField) {
-                capturePawn(compRow, compColumn, rowBelow, twoRowBelow, playerColumn, jumpedColumn);
-            System.out.println("No risky");
-        } else {
-            jumpToField(compRow, compColumn, rowBelow);
-            System.out.println("Risky");
-        }
+             if (!ifRiskOfCapture(twoRowBelow, playerColumn, compColumn) &&
+                 Board.board[rowBelow][jumpedColumn] == Board.emptyField) {
+                 capturePawn(compRow, compColumn, rowBelow, twoRowBelow, playerColumn, jumpedColumn);
+                 System.out.println("No risky");
+             } else {
+                 jumpToField(compRow, compColumn, rowBelow);
+                 System.out.println("Risky");
+             }
+     }
 
-    }
 
     private int getPlayerColumn(int rowBelow, int compColumn) {
         int playerColumn = 0;
@@ -48,7 +49,7 @@ public class Computer {
         return playerColumn;
     }
 
-    private int getJumpedColumn(int playerColumn, int compColumn){
+    private int getAfterCaptureColumn(int playerColumn, int compColumn){
         int jumpedColumn = 0;
         if(playerColumn == compColumn - 1)
             jumpedColumn = compColumn - 2;
@@ -59,13 +60,13 @@ public class Computer {
     }
 
     private boolean ifRiskOfCapture(int twoRowsBelow, int playerColumn, int compColumn){
-        int jumpedColumn = getJumpedColumn(playerColumn, compColumn);
+        int jumpedColumn = getAfterCaptureColumn(playerColumn, compColumn);
 
         int riskyOnLeft = compColumn - 2;
         int riskyOnRight = compColumn + 2;
 
-        int riskyOnLeftAfterCapture = getJumpedColumn(playerColumn, compColumn) - 1;
-        int riskyOnRightAfterCapture  = getJumpedColumn(playerColumn, compColumn) + 1;
+        int riskyOnLeftAfterCapture = getAfterCaptureColumn(playerColumn, compColumn) - 1;
+        int riskyOnRightAfterCapture  = getAfterCaptureColumn(playerColumn, compColumn) + 1;
 
             return (jumpedColumn > 0 && jumpedColumn < 7 &&
                     ((Board.board[twoRowsBelow][riskyOnLeft] == Player.playerPAWN || Board.board[twoRowsBelow][riskyOnRight] == Player.playerPAWN) ||
@@ -85,6 +86,7 @@ public class Computer {
         Random random = new Random();
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
+
         if (Board.board[compRow][leftColumn] == Board.emptyField &&
                 Board.board[compRow][rightColumn] == Board.emptyField) {
                 int randomColumn = (random.nextBoolean() ? leftColumn : rightColumn);

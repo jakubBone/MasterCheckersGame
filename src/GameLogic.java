@@ -6,7 +6,7 @@ public class GameLogic {
     Computer computer = new Computer();
     Player player = new Player();
 
-    void askForMove() {
+    public void askForMove() {
         while (Computer.compPawnNumbers > 0 || Player.playerPawnNumbers > 0) {
             Board.printBoard();
             System.out.println("WHICH PAWN TO CHOOSE?");
