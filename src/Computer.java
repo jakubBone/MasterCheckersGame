@@ -21,17 +21,49 @@ public class Computer {
         }
     }
 
+    private boolean ifRiskAfterMove(int compColumn, int twoRowsBelow){
+        int leftDirection= compColumn - 1;
+        int rightDirection = compColumn + 1;
+        return ((leftDirection > 0 && rightDirection < 7) &&
+                (Board.board[twoRowsBelow][leftDirection - 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][leftDirection + 1] == Player.playerPAWN) ||
+                (Board.board[twoRowsBelow][rightDirection - 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][rightDirection + 1] == Player.playerPAWN));
+    }
+    private boolean ifRiskOfAfterCapture(int compColumn, int twoRowsBelow){
+        int leftDirection= compColumn - 2;
+        int rightDirection = compColumn + 2;
+
+        return((leftDirection > 0 && rightDirection < 7) &&
+                (Board.board[twoRowsBelow][leftDirection - 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][leftDirection + 1] == Player.playerPAWN) ||
+                (Board.board[twoRowsBelow][rightDirection - 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][rightDirection + 1] == Player.playerPAWN));
+    }
+    private boolean canMove(int compColumn, int rowBelow){
+        return (Board.board[rowBelow][compColumn - 1] == Board.emptyField ||
+                Board.board[rowBelow][compColumn + 1]  == Board.emptyField);
+
+    }
+    private boolean canCapture(int compColumn, int rowBelow, int twoRowsBelow){
+        return ((Board.board[rowBelow][compColumn - 1] == Player.playerPAWN ||
+                Board.board[rowBelow][compColumn + 1]  == Player.playerPAWN) &&
+                (Board.board[twoRowsBelow][compColumn - 2] == Board.emptyField ||
+                        Board.board[twoRowsBelow][compColumn + 2] == Board.emptyField));
+    }
+
      private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
         int playerColumn = getPlayerColumn(rowBelow, compColumn);
         int afterCaptureColumn = getAfterCaptureColumn(playerColumn, compColumn);
 
-             if (!ifRiskOfCapture(twoRowBelow, playerColumn, compColumn) &&
-                 Board.board[rowBelow][afterCaptureColumn] == Board.emptyField) {
-                 capturePawn(compRow, compColumn, rowBelow, twoRowBelow, playerColumn, afterCaptureColumn);
-                 System.out.println("No risky");
-             } else {
+             if (canCapture(compColumn, rowBelow, twoRowBelow) &&
+                !ifRiskOfAfterCapture(compColumn, twoRowBelow) &&
+                Board.board[rowBelow][afterCaptureColumn] == Board.emptyField) {
+                    capturePawn(compRow, compColumn, rowBelow, twoRowBelow, playerColumn, afterCaptureColumn);
+                    System.out.println("capture");
+             } else if((canMove(compColumn, rowBelow) && !ifRiskAfterMove(compColumn, twoRowBelow))){
                  jumpToField(compRow, compColumn, rowBelow);
-                 System.out.println("Risky");
+                 System.out.println("move");
              }
      }
 
@@ -57,22 +89,6 @@ public class Computer {
 
         return afterCaptureColumn;
     }
-
-    private boolean ifRiskOfCapture(int twoRowsBelow, int playerColumn, int compColumn){
-        int afterCaptureColumn = getAfterCaptureColumn(playerColumn, compColumn);
-
-        int riskyOnLeft = compColumn - 2;
-        int riskyOnRight = compColumn + 2;
-
-        int riskyOnLeftAfterCapture = getAfterCaptureColumn(playerColumn, compColumn) - 1;
-        int riskyOnRightAfterCapture  = getAfterCaptureColumn(playerColumn, compColumn) + 1;
-
-            return (afterCaptureColumn > 0 && afterCaptureColumn < 7 &&
-                    ((Board.board[twoRowsBelow][riskyOnLeft] == Player.playerPAWN || Board.board[twoRowsBelow][riskyOnRight] == Player.playerPAWN) ||
-                    (Board.board[twoRowsBelow + 1][riskyOnLeftAfterCapture] == Player.playerPAWN || Board.board[twoRowsBelow + 1][riskyOnRightAfterCapture] == Player.playerPAWN)));
-    }
-
-
     private void capturePawn(int compRow, int compColumn,int rowBelow, int twoRowsBelow,
                      int playerColumn, int jumpedColumn){
             Board.board[compRow][compColumn] = Board.emptyField;
