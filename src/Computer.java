@@ -12,14 +12,13 @@ public class Computer {
                     System.out.println(i + " / " + j);
                     int compRow = i;
                     int compColumn = j;
-                    if (compRow >= 2 && compRow <= 5 && compColumn >= 2 && compColumn <= 5) {
+                    //if (compRow >= 2 && compRow <= 5 && compColumn >= 2 && compColumn <= 5) {
                         performBestMove(compRow, compColumn, compRow + 1, compRow + 2);
                         return;
                     }
                 }
             }
         }
-    }
 
     private boolean ifRiskAfterMove(int compColumn, int twoRowsBelow){
         int leftDirection= compColumn - 1;
