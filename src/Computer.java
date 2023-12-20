@@ -12,7 +12,6 @@ public class Computer {
                     System.out.println(i + " / " + j);
                     int compRow = i;
                     int compColumn = j;
-                    //if (compRow >= 2 && compRow <= 5 && compColumn >= 2 && compColumn <= 5) {
                         performBestMove(compRow, compColumn, compRow + 1, compRow + 2);
                         return;
                     }
@@ -40,17 +39,26 @@ public class Computer {
                         Board.board[twoRowsBelow][rightDirection + 1] == Player.playerPAWN));
     }
     private boolean canMove(int compColumn, int rowBelow){
-        return (Board.board[rowBelow][compColumn - 1] == Board.emptyField ||
-                Board.board[rowBelow][compColumn + 1]  == Board.emptyField);
+        int leftColumn = compColumn - 1;
+        int rightColumn = compColumn + 1;
+        return ((isCheckedColumnWithinBoard(leftColumn) && Board.board[rowBelow][leftColumn] == Board.emptyField) ||
+                (isCheckedColumnWithinBoard(rightColumn) && Board.board[rowBelow][rightColumn]  == Board.emptyField));
 
     }
     private boolean canCapture(int compColumn, int rowBelow, int twoRowsBelow){
-        return ((Board.board[rowBelow][compColumn - 1] == Player.playerPAWN ||
-                Board.board[rowBelow][compColumn + 1]  == Player.playerPAWN) &&
-                (Board.board[twoRowsBelow][compColumn - 2] == Board.emptyField ||
-                        Board.board[twoRowsBelow][compColumn + 2] == Board.emptyField));
+        boolean canCapture =false;
+        int leftColumn = compColumn - 1;
+        int rightColumn = compColumn + 1;
+        int doubleLeftColumn = compColumn - 2;
+        int doubleRightColumn = compColumn + 2;
+            if (((isCheckedColumnWithinBoard(leftColumn) && Board.board[rowBelow][leftColumn] == Player.playerPAWN ) ||
+                    (isCheckedColumnWithinBoard(rightColumn) && Board.board[rowBelow][rightColumn] == Player.playerPAWN)) &&
+                    ((isCheckedColumnWithinBoard(doubleLeftColumn) && Board.board[twoRowsBelow][doubleLeftColumn] == Board.emptyField) ||
+                    (isCheckedColumnWithinBoard(doubleRightColumn) && Board.board[twoRowsBelow][doubleRightColumn] == Board.emptyField))) {
+                canCapture = true;
+        }
+                return canCapture;
     }
-
      private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
         int playerColumn = getPlayerColumn(rowBelow, compColumn);
         int afterCaptureColumn = getAfterCaptureColumn(playerColumn, compColumn);
@@ -66,19 +74,24 @@ public class Computer {
              }
      }
 
+    private boolean isCheckedColumnWithinBoard(int checkedColumn){
+        return(checkedColumn >=0 && checkedColumn <=7);
+    }
 
     private int getPlayerColumn(int rowBelow, int compColumn) {
         int playerColumn = 0;
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
-        if (Board.board[rowBelow][leftColumn] == Player.playerPAWN)
+        if (isCheckedColumnWithinBoard(leftColumn) && Board.board[rowBelow][leftColumn] == Player.playerPAWN) {
             playerColumn = leftColumn;
-        else if (Board.board[rowBelow][rightColumn] == Player.playerPAWN)
+            System.out.println("getPlayerColumn left");
+        } else if (Board.board[rowBelow][rightColumn] == Player.playerPAWN){
             playerColumn = rightColumn;
+            System.out.println("getPlayerColumn right");
+        }
 
         return playerColumn;
     }
-
     private int getAfterCaptureColumn(int playerColumn, int compColumn){
         int afterCaptureColumn = 0;
         if(playerColumn == compColumn - 1)
