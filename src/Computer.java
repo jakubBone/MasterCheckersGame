@@ -4,8 +4,83 @@ public class Computer {
     final static char computerPAWN = 'X';
     static int compPawnNumbers = 12;
     final static char computerQueenPawn = '#';
-    
+
+
     public void findPawnAndMove() {
+        for (int i = 8; i >= 0; i--) {
+            for (int j = 0; j <= 8; j++) {
+                if (Board.board[i][j] == computerPAWN) {
+                    System.out.println(i + " / " + j);
+                    int compRow = i;
+                    int compColumn = j;
+                    int rowBelow = i + 1;
+                    int twoRowsBelow = i + 1;
+                    int counter = 0;
+                    if (compRow >= 2 && compRow <= 5 && compColumn >= 2 && compColumn <= 5) {
+                        int playerColumn = getPlayerColumn(rowBelow, compColumn);
+                        int afterCaptureColumn = getAfterCaptureColumn(playerColumn, compColumn);
+                        while (counter == compPawnNumbers) {
+                            if (canCapture(compColumn, rowBelow, twoRowsBelow) && !ifRiskOfAfterCapture(compColumn, twoRowsBelow) &&
+                                    Board.board[rowBelow][afterCaptureColumn] == Board.emptyField) {
+                                capturePawn(compRow, compColumn, rowBelow, twoRowsBelow, playerColumn, afterCaptureColumn);
+                                System.out.println("capture");
+                                break;
+                            }
+                            counter = counter + 1;
+                        }
+                        if((canMove(compColumn, rowBelow) && !ifRiskAfterMove(compColumn, twoRowsBelow))) {
+                            jumpToField(compRow, compColumn, rowBelow);
+                            System.out.println("move");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /*public void findPawnAndMove() {
+        while(true){
+        for (int i = 8; i >= 0; i--) {
+            for (int j = 0; j <= 8; j++) {
+                if (Board.board[i][j] == computerPAWN) {
+                    System.out.println(i + " / " + j);
+                    int compRow = i;
+                    int compColumn = j;
+                    int rowBelow = i + 1;
+                    int twoRowsBelow = i + 1;
+                    int playerColumn = getPlayerColumn(rowBelow, compColumn);
+                    int afterCaptureColumn = getAfterCaptureColumn(playerColumn, compColumn);
+                    int counter = counter + 1;
+
+                    if(counter == compPawnNumbers){
+                        break;
+                    }
+                    if (compRow >= 2 && compRow <= 5 && compColumn >= 2 && compColumn <= 5) {
+
+                        if(!canCapture(compColumn, rowBelow, twoRowsBelow)  {
+                            System.out.println("can't capture");
+                            break;
+                        } else{
+                            if(canCapture(compColumn, rowBelow, twoRowsBelow) && !ifRiskOfAfterCapture(compColumn, twoRowsBelow) &&
+                                    Board.board[rowBelow][afterCaptureColumn] == Board.emptyField) {
+                                    capturePawn(compRow, compColumn, rowBelow, twoRowsBelow, playerColumn, afterCaptureColumn);
+                                    System.out.println("capture");
+                            }
+                                if ((canMove(compColumn, rowBelow) && !ifRiskAfterMove(compColumn, twoRowsBelow))) {
+                                    jumpToField(compRow, compColumn, rowBelow);
+                                    System.out.println("move");
+                                    break;
+                                } else
+                                    System.out.println("??");
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }*/
+    /*public void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
                 if (Board.board[i][j] == computerPAWN) {
@@ -19,7 +94,7 @@ public class Computer {
                 }
             }
         }
-    }
+    }*/
 
     private boolean ifRiskAfterMove(int compColumn, int twoRowsBelow){
         int leftDirection= compColumn - 1;
@@ -101,20 +176,19 @@ public class Computer {
         Random random = new Random();
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
-
-        if (Board.board[compRow][leftColumn] == Board.emptyField &&
-                Board.board[compRow][rightColumn] == Board.emptyField) {
+        if (Board.board[rowBelow][leftColumn] == Board.emptyField &&
+                Board.board[rowBelow][rightColumn] == Board.emptyField) {
                 int randomColumn = (random.nextBoolean() ? leftColumn : rightColumn);
                 Board.board[compRow][compColumn] = Board.emptyField;
                 Board.board[rowBelow][randomColumn] = computerPAWN;
                 System.out.println("Two field to choose possible");
         } else {
-            if(Board.board[compRow][leftColumn] == Board.emptyField){
+            if(Board.board[rowBelow][leftColumn] == Board.emptyField){
                 Board.board[compRow][compColumn] = Board.emptyField;
                 Board.board[rowBelow][leftColumn] = computerPAWN;
                 System.out.println("Only the left field to choose possible");
             }
-            else if(Board.board[compRow][rightColumn] == Board.emptyField) {
+            else if(Board.board[rowBelow][rightColumn] == Board.emptyField) {
                 Board.board[compRow][compColumn] = Board.emptyField;
                 Board.board[rowBelow][rightColumn] = computerPAWN;
                 System.out.println("Only the right field to choose possible");
