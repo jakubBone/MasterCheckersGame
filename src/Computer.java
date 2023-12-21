@@ -4,59 +4,80 @@ public class Computer {
     final static char computerPAWN = 'X';
     static int compPawnNumbers = 12;
     final static char computerQueenPawn = '#';
-
     private boolean  movePerformed = false;
 
     public void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
                 if (Board.board[i][j] == computerPAWN) {
+                    movePerformed = false;
                     System.out.println(i + " / " + j);
                     int compRow = i;
                     int compColumn = j;
                     int rowBelow = compRow + 1;
-                    int twoRowBelow = compRow + 2;
-                        performBestMove(compRow, compColumn, compRow + 1, compRow + 2);
-                        movePerformed = false;
+                    int twoRowsBelow = compRow + 2;
+                    int threeRowsBelow = compRow + 3;
+                        performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
                 }
             }
         }
     }
-
-
-    private boolean ifRiskAfterMove(int compColumn, int twoRowsBelow){
-        int leftDirection= compColumn - 1;
-        int rightDirection = compColumn + 1;
-        return ((leftDirection > 0 && rightDirection < 7) &&
-                (Board.board[twoRowsBelow][leftDirection - 1] == Player.playerPAWN ||
-                        Board.board[twoRowsBelow][leftDirection + 1] == Player.playerPAWN) ||
-                (Board.board[twoRowsBelow][rightDirection - 1] == Player.playerPAWN ||
-                        Board.board[twoRowsBelow][rightDirection + 1] == Player.playerPAWN));
+    private boolean isRiskAfterMove(int compColumn, int twoRowsBelow) {
+        boolean isRisk = false;
+        if (compColumn == 0 || compColumn == 1) {
+                if((Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn + 2] == Player.playerPAWN))
+                            isRisk = true;
+        } else if(compColumn == 6 || compColumn == 7){
+            if ((Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn - 2] == Player.playerPAWN))
+                            isRisk = true;
+        } else if(compColumn >= 2 || compColumn <=5) {
+            if(Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn - 2] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn + 2] == Player.playerPAWN)
+                            isRisk = true;
+        }
+        return isRisk;
     }
-    private boolean ifRiskOfAfterCapture(int compColumn, int twoRowsBelow){
-        int leftDirection= compColumn - 2;
-        int rightDirection = compColumn + 2;
+    private boolean isRiskAfterCapture(int compColumn, int twoRowsBelow, int threeRowsBelow){
+        boolean isRisk = false;
 
-        return((leftDirection > 0 && rightDirection < 7) &&
-                (Board.board[twoRowsBelow][leftDirection - 1] == Player.playerPAWN ||
-                        Board.board[twoRowsBelow][leftDirection + 1] == Player.playerPAWN) ||
-                (Board.board[twoRowsBelow][rightDirection - 1] == Player.playerPAWN ||
-                        Board.board[twoRowsBelow][rightDirection + 1] == Player.playerPAWN));
-    }
 
-     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow) {
-                if (!ifRiskOfAfterCapture(compColumn, twoRowBelow)) {
-                    capturePawn(compRow, compColumn, rowBelow, twoRowBelow);
-                    System.out.println("capture");
-                    System.out.println(movePerformed);
-                    if(!movePerformed){
-                        if(!ifRiskAfterMove(compColumn, twoRowBelow)) {
-                            jumpToField(compRow, compColumn, rowBelow);
-                            System.out.println("move");
-                    }
-                }
-                }
+        if (compColumn == 0 || compColumn == 1 || compColumn == 2) {
+            System.out.println("isRiskAfterCapture -- 2");
+            if((Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn + 3] == Player.playerPAWN)) {
+                    System.out.println("isRiskAfterCapture -- 2.2");
+                    isRisk = true;
             }
+        } else if(compColumn == 5 || compColumn == 6 || compColumn == 7){
+            if ((Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn - 3] == Player.playerPAWN))
+                isRisk = true;
+        } else if(compColumn >= 3 || compColumn <=4) {
+            if((Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn - 3] == Player.playerPAWN) ||
+                    (Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ||
+                    Board.board[twoRowsBelow][compColumn + 3] == Player.playerPAWN))
+                        isRisk = true;
+        }
+        return isRisk;
+    }
+
+     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
+
+            if (!isRiskAfterCapture(compColumn, threeRowsBelow, threeRowsBelow)){
+                    capturePawn(compRow, compColumn, rowBelow, threeRowsBelow);
+                    System.out.println("capture");
+                    movePerformed = true;
+            } else if (!isRiskAfterMove(compColumn, threeRowsBelow)) {
+             jumpToField(compRow, compColumn, rowBelow);
+             System.out.println("jump");
+             movePerformed = true;
+         }
+     }
+
 
     private boolean isPlayerOnLeft(int compColumn, int rowBelow){
         int leftColumn = compColumn - 1;
@@ -86,7 +107,6 @@ public class Computer {
                 Player.playerPawnNumbers -= 1;
                 GameLogic.currentPlayer = "Human";
                 System.out.println("right");
-                movePerformed = true;
             }
         } else if (compColumn == 6 || compColumn == 7) {
             System.out.println("compColumn == 6 || compColumn == 7");
@@ -155,7 +175,6 @@ public class Computer {
         else {
             System.out.println("???");
         }
-        movePerformed = true;
     }
 
     private void jumpToField(int compRow, int compColumn, int rowBelow) {
@@ -193,6 +212,7 @@ public class Computer {
                 }
             }
         }
+        movePerformed = true;
     }
 
 }
