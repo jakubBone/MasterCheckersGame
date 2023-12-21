@@ -109,7 +109,46 @@ public class Computer {
             Player.playerPawnNumbers -= 1;
             GameLogic.currentPlayer = "Human";
     }
+
+
     private void jumpToField(int compRow, int compColumn, int rowBelow) {
+        Random random = new Random();
+        int leftColumn = compColumn - 1;
+        int rightColumn = compColumn + 1;
+
+        if (compColumn == 0 || compColumn == 7) {
+            if(compColumn == 0 && Board.board[rowBelow][rightColumn] == Board.emptyField){
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][rightColumn] = computerPAWN;
+                    System.out.println("Only the right field to choose possible");
+            }
+            else if(compColumn == 7  && Board.board[rowBelow][leftColumn] == Board.emptyField){
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][leftColumn] = computerPAWN;
+                    System.out.println("Column 0");
+            }
+        } else {
+            if (Board.board[rowBelow][leftColumn] == Board.emptyField &&
+                    Board.board[rowBelow][rightColumn] == Board.emptyField) {
+                int randomColumn = (random.nextBoolean() ? leftColumn : rightColumn);
+                Board.board[compRow][compColumn] = Board.emptyField;
+                Board.board[rowBelow][randomColumn] = computerPAWN;
+                System.out.println("Two field to choose possible");
+            } else {
+                if (Board.board[rowBelow][leftColumn] == Board.emptyField) {
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][leftColumn] = computerPAWN;
+                    System.out.println("Only the left field to choose possible");
+                } else if (Board.board[rowBelow][rightColumn] == Board.emptyField) {
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][rightColumn] = computerPAWN;
+                    System.out.println("Only the right field to choose possible");
+                }
+            }
+        }
+    }
+
+    /*private void jumpToField(int compRow, int compColumn, int rowBelow) {
         Random random = new Random();
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
@@ -131,7 +170,7 @@ public class Computer {
                 System.out.println("Only the right field to choose possible");
             }
         }
-    }
+    }*/
 }
 
 
