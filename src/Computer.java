@@ -24,44 +24,52 @@ public class Computer {
     }
     private boolean isRiskAfterMove(int compColumn, int twoRowsBelow) {
         boolean isRisk = false;
-        if (compColumn == 0 || compColumn == 1) {
+
+        if(compColumn >= 5) {
+            if (compColumn == 0 || compColumn == 1) {
                 if((Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
                         Board.board[twoRowsBelow][compColumn + 2] == Player.playerPAWN))
-                            isRisk = true;
-        } else if(compColumn == 6 || compColumn == 7){
-            if ((Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn - 2] == Player.playerPAWN))
-                            isRisk = true;
-        } else if(compColumn >= 2 || compColumn <=5) {
-            if(Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn - 2] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn + 2] == Player.playerPAWN)
-                            isRisk = true;
+                    isRisk = true;
+            } else if(compColumn == 6 || compColumn == 7){
+                if ((Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn - 2] == Player.playerPAWN))
+                    isRisk = true;
+            } else if(compColumn >= 2 || compColumn <=5) {
+                if(Board.board[twoRowsBelow][compColumn] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn - 2] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn + 2] == Player.playerPAWN)
+                    isRisk = true;
+            }
         }
+
+
         return isRisk;
     }
     private boolean isRiskAfterCapture(int compColumn, int twoRowsBelow, int threeRowsBelow){
         boolean isRisk = false;
 
-
-        if (compColumn == 0 || compColumn == 1 || compColumn == 2) {
-            System.out.println("isRiskAfterCapture -- 2");
-            if((Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn + 3] == Player.playerPAWN)) {
+        if(compColumn >= 4){
+            if (compColumn == 0 || compColumn == 1) {
+                System.out.println("isRiskAfterCapture -- 2");
+                if((Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn + 3] == Player.playerPAWN)) {
                     System.out.println("isRiskAfterCapture -- 2.2");
                     isRisk = true;
+                }
+            } else if(compColumn == 5 || compColumn == 6 || compColumn == 7){
+                if ((Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn - 3] == Player.playerPAWN))
+                    isRisk = true;
+            } else if(compColumn >= 3 || compColumn <=4) {
+                if((Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][compColumn - 3] == Player.playerPAWN) ||
+                        (Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ||
+                                Board.board[twoRowsBelow][compColumn + 3] == Player.playerPAWN))
+                    isRisk = true;
             }
-        } else if(compColumn == 5 || compColumn == 6 || compColumn == 7){
-            if ((Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn - 3] == Player.playerPAWN))
-                isRisk = true;
-        } else if(compColumn >= 3 || compColumn <=4) {
-            if((Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn - 3] == Player.playerPAWN) ||
-                    (Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][compColumn + 3] == Player.playerPAWN))
-                        isRisk = true;
         }
+
+
         return isRisk;
     }
 
