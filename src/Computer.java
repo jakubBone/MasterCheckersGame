@@ -26,6 +26,9 @@ public class Computer {
             }
         }
     }
+    private boolean isMoveInRange(int row, int column) {
+        return row >= 0 && row < 9 && column >= 0 && column < 9;
+    }
 
     private boolean isRiskAfterMove(int compColumn, int compRow, int twoRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
@@ -33,11 +36,9 @@ public class Computer {
             int rightColumn = compColumn + 2;
 
             System.out.println("riskMove " + leftColumn + "/" + rightColumn);
-
-            return Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][rightColumn] == Player.playerPAWN;
+            return ((isMoveInRange(twoRowsBelow, leftColumn) && Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN) ||
+                    (isMoveInRange(twoRowsBelow, rightColumn) && Board.board[twoRowsBelow][rightColumn] == Player.playerPAWN));
         }
-
         return false;
     }
 
@@ -46,8 +47,9 @@ public class Computer {
             if (compColumn == 3 || compColumn == 4) {
                 int leftColumn = compColumn - 3;
                 int rightColumn = compColumn + 3;
-                return (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN ||
-                        Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN);
+                return ((isMoveInRange(threeRowsBelow, rightColumn) && Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN) ||
+                        (isMoveInRange(threeRowsBelow, rightColumn) && Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN) ||
+                        (isMoveInRange(threeRowsBelow, compColumn) && Board.board[threeRowsBelow][compColumn] == Player.playerPAWN));
             }
             else {
                 int leftColumn = compColumn - 2;
@@ -55,30 +57,48 @@ public class Computer {
 
                 System.out.println("isRiskAfterCapture compRow = 0 - 4");
 
-                return (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN ||
-                        Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN);
+                return ((isMoveInRange(twoRowsBelow, leftColumn) && Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN) ||
+                        (isMoveInRange(twoRowsBelow, rightColumn) && Board.board[twoRowsBelow][rightColumn] == Player.playerPAWN));
             }
         }
         return false;
     }
+
     /*private boolean isRiskAfterCapture(int compColumn, int compRow, int twoRowsBelow, int threeRowsBelow) {
+        int leftColumn = compColumn - 3;
+        int rightColumn = compColumn + 3;
+
         if (compRow >= 0 && compRow <= 4) {
-            int leftColumn = compColumn - 2;
-            int rightColumn = compColumn + 2;
-
             System.out.println("isRiskAfterCapture compRow = 0 - 4");
+            if (compColumn == 3 || compColumn == 4) {
+                return ((isMoveInRange(threeRowsBelow, rightColumn) && Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN
+                        && Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN ) ||
+                        (isMoveInRange(threeRowsBelow, leftColumn) && Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN
+                                && Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN));
+            }
+            else {
+                if(compColumn == 0 && compColumn == 1){
+                    return (isMoveInRange(twoRowsBelow, rightColumn) && Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN &&
+                        Board.board[twoRowsBelow][rightColumn] == Board.emptyField);
+                }
+                else if(compColumn == 6 && compColumn == 7){
+                    return (isMoveInRange(twoRowsBelow, leftColumn) && Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN &&
+                        Board.board[twoRowsBelow][leftColumn] == Board.emptyField);
+                }
+                else if(compColumn == 2 && compColumn == 5){
+                    return (isMoveInRange(twoRowsBelow, leftColumn) && Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN &&
+                            Board.board[twoRowsBelow][leftColumn] == Board.emptyField);
+                }
 
-            return (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN ||
-                    Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN);
+            }
         }
         return false;
     }*/
 
+
     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, threeRowsBelow)) {
-            System.out.println("capture possible: " + isCapturePossible(compColumn, rowBelow, threeRowsBelow));
-
-            if (!isRiskAfterCapture(compColumn, compRow, threeRowsBelow, threeRowsBelow)) {
+            if (!isRiskAfterCapture(compColumn, compRow, twoRowBelow, threeRowsBelow)) {
                 System.out.println("No risk of capture");
                 capturePawn(compRow, compColumn, rowBelow, twoRowBelow);
                 System.out.println("capture");
@@ -97,7 +117,7 @@ public class Computer {
             }
         }
         else
-            System.out.println("capture possible: " + isCapturePossible(compColumn, rowBelow, twoRowBelow));
+            System.out.println("capture possible 2: " + isCapturePossible(compColumn, rowBelow, twoRowBelow));
     }
 
     private boolean isPlayerOnLeft(int compColumn, int rowBelow) {
@@ -171,6 +191,8 @@ public class Computer {
         int rightAfterCapture = compColumn + 2;
 
         if (compColumn == 0 || compColumn == 1) {
+            System.out.println("X");
+            System.out.println("Y");
             return isPlayerOnRight(compColumn, rowBelow) && Board.board[twoRowsBelow][rightAfterCapture] == Board.emptyField;
         } else if (compColumn == 6 || compColumn == 7) {
             return isPlayerOnLeft(compColumn, rowBelow) && Board.board[twoRowsBelow][leftAfterCapture] == Board.emptyField;
