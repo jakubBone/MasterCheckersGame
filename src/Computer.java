@@ -43,6 +43,26 @@ public class Computer {
 
     private boolean isRiskAfterCapture(int compColumn, int compRow, int twoRowsBelow, int threeRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
+            if (compColumn == 3 || compColumn == 4) {
+                int leftColumn = compColumn - 3;
+                int rightColumn = compColumn + 3;
+                return (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN);
+            }
+            else {
+                int leftColumn = compColumn - 2;
+                int rightColumn = compColumn + 2;
+
+                System.out.println("isRiskAfterCapture compRow = 0 - 4");
+
+                return (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN ||
+                        Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN);
+            }
+        }
+        return false;
+    }
+    /*private boolean isRiskAfterCapture(int compColumn, int compRow, int twoRowsBelow, int threeRowsBelow) {
+        if (compRow >= 0 && compRow <= 4) {
             int leftColumn = compColumn - 2;
             int rightColumn = compColumn + 2;
 
@@ -52,22 +72,26 @@ public class Computer {
                     Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN);
         }
         return false;
-    }
+    }*/
 
     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, threeRowsBelow)) {
             System.out.println("capture possible: " + isCapturePossible(compColumn, rowBelow, threeRowsBelow));
 
             if (!isRiskAfterCapture(compColumn, compRow, threeRowsBelow, threeRowsBelow)) {
+                System.out.println("No risk of capture");
                 capturePawn(compRow, compColumn, rowBelow, twoRowBelow);
                 System.out.println("capture");
                 movePerformed = true;
             } else {
+                System.out.println("Risk of capture");
                 if (!isRiskAfterMove(compColumn, compRow, twoRowBelow)) {
+                    System.out.println("No risk of move");
                     jumpToField(compRow, compColumn, rowBelow);
                     System.out.println("jump");
                     movePerformed = true;
                 } else {
+                    System.out.println("Risk of move");
                     System.out.println("All moves are under risk");
                 }
             }
@@ -115,14 +139,11 @@ public class Computer {
                                         int columnOnRight, int twoRowsBelow, int leftAfterCapture, int rightAfterCapture) {
         if (isPlayerOnBothSides(compColumn, rowBelow)) {
             System.out.println("both sides");
-            if (Board.board[twoRowsBelow][leftAfterCapture] == Board.emptyField &&
-                    Board.board[twoRowsBelow][rightAfterCapture] == Board.emptyField) {
-                int randomColumn = getRandomColumn(columnOnLeft, columnOnRight);
-                if(randomColumn == columnOnLeft)
-                    performCapture(compRow, columnOnLeft, twoRowsBelow, randomColumn, compColumn);
-                else
+            int randomColumn = getRandomColumn(columnOnLeft, columnOnRight);
+            if(randomColumn == columnOnLeft && Board.board[twoRowsBelow][leftAfterCapture] == Board.emptyField)
+                performCapture(compRow, columnOnLeft, twoRowsBelow, randomColumn, compColumn);
+            else if(randomColumn == columnOnRight && Board.board[twoRowsBelow][rightAfterCapture] == Board.emptyField)
                     performCapture(compRow, columnOnRight, twoRowsBelow, randomColumn, compColumn);
-            }
         } else if (isPlayerOnLeft(compColumn, rowBelow)) {
             System.out.println("left");
             handleCaptureMove(columnOnLeft, twoRowsBelow, leftAfterCapture, compColumn, compRow);
