@@ -42,6 +42,7 @@ public class Computer {
         return false;
     }
 
+
     private boolean isRiskAfterCapture(int compColumn, int compRow, int twoRowsBelow, int threeRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
             if (compColumn == 3 || compColumn == 4) {
