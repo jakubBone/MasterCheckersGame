@@ -162,7 +162,10 @@ public class Computer {
         Board.board[compRow + 1][capturedColumn] = Board.emptyField;
         Board.board[compRow][compColumn] = Board.emptyField;
         System.out.println(capturedColumn);
-        Board.board[twoRowsBelow][newColumn] = Computer.computerPAWN;
+        if(twoRowsBelow == 75)
+            Board.board[twoRowsBelow][newColumn] = computerQueenPawn;
+        else
+            Board.board[twoRowsBelow][newColumn] = computerPAWN;
         Player.playerPawnNumbers -= 1;
         GameLogic.currentPlayer = "Human";
         movePerformed = true;
@@ -210,7 +213,13 @@ public class Computer {
 
     private void performJump(int compRow, int compColumn, int rowBelow, int newColumn) {
         Board.board[compRow][compColumn] = Board.emptyField;
-        Board.board[rowBelow][newColumn] = computerPAWN;
+        if(rowBelow == 7)
+            Board.board[rowBelow][newColumn] = computerQueenPawn;
+        else
+            Board.board[rowBelow][newColumn] = computerPAWN;
         movePerformed = true;
     }
+
 }
+
+
