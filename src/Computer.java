@@ -53,6 +53,58 @@ public class Computer {
         return (row >= 0 && row < 9 && column >= 0 && column < 9);
     }
 
+    //////////////// QUEEN PART ///////////////////////////
+    /*private void performPawnMove() {
+        if (isPawnMoveValid()) {
+            if (isRowAbovePawnSelected()) {
+                jumpToField();
+            } else if (areTwoRowsAbovePawnSelected()) {
+                capturePawn();
+            }
+        } else {
+            printMessageOfInvalidMove();
+        }
+        GameLogic.currentPlayer = "Computer";
+    }
+    private void performQueenMove() {
+        if (isQueenMoveValid()) {
+            jumpQueenToField();
+            if (isEnemyOnQueenRoad()) {
+                capturePawnWithQueen();
+            }
+        }
+        GameLogic.currentPlayer = "Player";
+    }*/
+    // Later add Board.board[i][j] == '@'
+    private boolean isPawnOnQueenRoad(int compRow, int newRow, int compColumn, int newColumn){
+        for (int i = Math.min(compRow, newRow) + 1; i < Math.max(compRow, newRow); i++) {
+            for (int j = Math.min(compColumn, newColumn) + 1; j < Math.max(compColumn, newColumn); j++) {
+                if (Board.board[i][j] == Player.playerPAWN) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private void capturePawnWithQueen(int compRow, int newRow, int compColumn, int newColumn){
+        for (int i = Math.min(compRow, newRow) + 1; i < Math.max(compRow, newRow); i++) {
+            for (int j = Math.min(compColumn, newColumn) + 1; j < Math.max(compColumn, newColumn); j++) {
+                if (Board.board[i][j] != Board.emptyField && Board.board[i][j] != Player.playerPAWN) {
+                    Board.board[i][j] = Board.emptyField;
+                }
+            }
+        }
+        Computer.compPawnNumbers -= 1;
+    }
+
+    private void jumpQueenToField(int compRow, int compColumn, int newRow, int newColumn) {
+        Board.board[compRow][compColumn] = Board.emptyField;
+        Board.board[newRow][newColumn] = computerQueenPawn;
+    }
+
+    //////////////// QUEEN PART ///////////////////////////
+
+
     private boolean isRiskAfterMove(int compColumn, int compRow, int twoRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
             int leftColumn = compColumn - 2;
@@ -162,7 +214,7 @@ public class Computer {
         Board.board[compRow + 1][capturedColumn] = Board.emptyField;
         Board.board[compRow][compColumn] = Board.emptyField;
         System.out.println(capturedColumn);
-        if(twoRowsBelow == 75)
+        if(twoRowsBelow == 7)
             Board.board[twoRowsBelow][newColumn] = computerQueenPawn;
         else
             Board.board[twoRowsBelow][newColumn] = computerPAWN;
