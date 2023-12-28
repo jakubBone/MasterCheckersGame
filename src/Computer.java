@@ -153,7 +153,6 @@ public class Computer {
             handleCaptureMove(columnOnRight, twoRowsBelow, rightAfterCapture, compColumn, compRow);
         }
     }
-
     private int getRandomColumn(int leftAfterCapture, int rightAfterCapture) {
         Random random = new Random();
         return random.nextBoolean() ? leftAfterCapture : rightAfterCapture;
