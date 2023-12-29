@@ -9,7 +9,7 @@ public class Computer {
     public void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
-                if (Board.board[i][j] == computerPAWN) {
+                if (Board.board[i][j] == computerPAWN && Board.board[i][j] == computerQueenPawn) {
                     movePerformed = false;
                     System.out.println(i + " / " + j);
                     int compRow = i;
@@ -17,8 +17,10 @@ public class Computer {
                     int rowBelow = compRow + 1;
                     int twoRowsBelow = compRow + 2;
                     int threeRowsBelow = compRow + 3;
+                    int [] queenField = new int[2];
                     performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
                     System.out.println("move performed: " + movePerformed);
+
                     if (movePerformed) {
                         return;
                     }
@@ -27,14 +29,13 @@ public class Computer {
         }
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
-                if (Board.board[i][j] == computerPAWN) {
+                if (Board.board[i][j] == computerPAWN && Board.board[i][j] == computerQueenPawn) {
                     movePerformed = false;
                     System.out.println(i + " / " + j);
                     int compRow = i;
                     int compColumn = j;
                     int rowBelow = compRow + 1;
                     int twoRowsBelow = compRow + 2;
-                    int threeRowsBelow = compRow + 3;
                     if(isCapturePossible(compColumn, rowBelow, twoRowsBelow)){
                         capturePawn(compRow, compColumn, rowBelow, twoRowsBelow);
                     }
@@ -53,38 +54,35 @@ public class Computer {
         return (row >= 0 && row < 9 && column >= 0 && column < 9);
     }
 
-    //////////////// QUEEN PART ///////////////////////////
-    /*private void performPawnMove() {
-        if (isPawnMoveValid()) {
-            if (isRowAbovePawnSelected()) {
-                jumpToField();
-            } else if (areTwoRowsAbovePawnSelected()) {
-                capturePawn();
-            }
-        } else {
-            printMessageOfInvalidMove();
-        }
-        GameLogic.currentPlayer = "Computer";
+    //////////////// Queen move ///////////////////
+
+    private void mainCapture(int compRow, int compColumn, int rowBelow, int twoRowsBelow, int newRow, int newColumn){
+        if(Board.board[compRow][compColumn] == computerPAWN)
+            capturePawn(compRow, compColumn, rowBelow,twoRowsBelow);
+        else if (Board.board[compRow][compColumn] == computerQueenPawn)
+            capturePawnWithQueen(compRow, newRow, compColumn, newColumn);
     }
-    private void performQueenMove() {
-        if (isQueenMoveValid()) {
-            jumpQueenToField();
-            if (isEnemyOnQueenRoad()) {
-                capturePawnWithQueen();
-            }
-        }
-        GameLogic.currentPlayer = "Player";
-    }*/
-    // Later add Board.board[i][j] == '@'
-    private boolean isPawnOnQueenRoad(int compRow, int newRow, int compColumn, int newColumn){
-        for (int i = Math.min(compRow, newRow) + 1; i < Math.max(compRow, newRow); i++) {
-            for (int j = Math.min(compColumn, newColumn) + 1; j < Math.max(compColumn, newColumn); j++) {
-                if (Board.board[i][j] == Player.playerPAWN) {
-                    return true;
+    private void mainJump(int compRow, int compColumn, int rowBelow, int newRow, int newColumn){
+        if(Board.board[compRow][compColumn] == computerPAWN)
+            jumpToField(compRow, compColumn, rowBelow);
+        else if (Board.board[compRow][compColumn] == computerQueenPawn)
+            performJumpQueen(compRow, compColumn, newRow, newColumn);
+    }
+    public static boolean canQueenCapture(int compRow, int compColumn) {
+        int[][] directions = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+        for (int[] direction : directions) {
+            int directionRow = direction[0];
+            int directionColumn = direction[1];
+
+            int newX = compRow + directionRow;
+            int newY = compColumn + directionColumn;
+
+                if (Board.board[newX][newY] != 0 && (Board.board[newX][newY] != Player.playerPAWN || Board.board[newX][newY] != Player.playerQueenPAWN)) {
+                    return true;  // can capture
                 }
             }
         }
-        return false;
+        return false;  // can't capture
     }
     private void capturePawnWithQueen(int compRow, int newRow, int compColumn, int newColumn){
         for (int i = Math.min(compRow, newRow) + 1; i < Math.max(compRow, newRow); i++) {
@@ -96,13 +94,13 @@ public class Computer {
         }
         Computer.compPawnNumbers -= 1;
     }
-
-    private void jumpQueenToField(int compRow, int compColumn, int newRow, int newColumn) {
+    private void performJumpQueen(int compRow, int compColumn, int newRow, int newColumn) {
         Board.board[compRow][compColumn] = Board.emptyField;
         Board.board[newRow][newColumn] = computerQueenPawn;
     }
 
-    //////////////// QUEEN PART ///////////////////////////
+
+    //////////////// Queen move ///////////////////
 
 
     private boolean isRiskAfterMove(int compColumn, int compRow, int twoRowsBelow) {
@@ -116,7 +114,6 @@ public class Computer {
         }
         return false;
     }
-
     private boolean isRiskAfterCapture(int compColumn, int compRow, int twoRowsBelow, int threeRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
             if (compColumn == 3 || compColumn == 4) {
@@ -138,7 +135,6 @@ public class Computer {
         }
         return false;
     }
-
     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, threeRowsBelow)) {
             if (isRiskAfterCapture(compColumn, compRow, twoRowBelow, threeRowsBelow)) {
@@ -152,21 +148,17 @@ public class Computer {
             jumpToField(compRow, compColumn, rowBelow);
         }
     }
-
     private boolean isPlayerOnLeft(int compColumn, int rowBelow) {
         int leftColumn = compColumn - 1;
         return (Board.board[rowBelow][leftColumn] == Player.playerPAWN);
     }
-
     private boolean isPlayerOnRight(int compColumn, int rowBelow) {
         int rightColumn = compColumn + 1;
         return (Board.board[rowBelow][rightColumn] == Player.playerPAWN);
     }
-
     private boolean isPlayerOnBothSides(int compColumn, int rowBelow) {
         return (isPlayerOnLeft(compColumn, rowBelow) && isPlayerOnRight(compColumn, rowBelow));
     }
-
     private void capturePawn(int compRow, int compColumn, int rowBelow, int twoRowsBelow) {
         int columnOnLeft = compColumn - 1;
         int columnOnRight = compColumn + 1;
@@ -181,13 +173,11 @@ public class Computer {
             handleBothSidesCapture(compRow, compColumn, rowBelow, columnOnLeft, columnOnRight, twoRowsBelow, leftAfterCapture, rightAfterCapture);
         }
     }
-
     private void handleCaptureMove(int capturedColumn, int twoRowsBelow, int newColumn, int compColumn, int compRow) {
         if (Board.board[twoRowsBelow][newColumn] == Board.emptyField) {
             performCapture(compRow, capturedColumn, twoRowsBelow, newColumn, compColumn);
         }
     }
-
     private void handleBothSidesCapture(int compRow, int compColumn, int rowBelow, int columnOnLeft,
                                         int columnOnRight, int twoRowsBelow, int leftAfterCapture, int rightAfterCapture) {
         if (isPlayerOnBothSides(compColumn, rowBelow)) {
@@ -209,7 +199,6 @@ public class Computer {
         Random random = new Random();
         return random.nextBoolean() ? leftAfterCapture : rightAfterCapture;
     }
-
     private void performCapture(int compRow, int capturedColumn, int twoRowsBelow, int newColumn, int compColumn) {
         Board.board[compRow + 1][capturedColumn] = Board.emptyField;
         Board.board[compRow][compColumn] = Board.emptyField;
@@ -237,8 +226,6 @@ public class Computer {
             }
         return false;
     }
-
-
     private void jumpToField(int compRow, int compColumn, int rowBelow) {
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
@@ -256,13 +243,11 @@ public class Computer {
             }
         }
     }
-
     private void handleJumpMove(int compRow, int compColumn, int rowBelow, int newColumn) {
         if (Board.board[rowBelow][newColumn] == Board.emptyField) {
             performJump(compRow, compColumn, rowBelow, newColumn);
         }
     }
-
     private void performJump(int compRow, int compColumn, int rowBelow, int newColumn) {
         Board.board[compRow][compColumn] = Board.emptyField;
         if(rowBelow == 7)
@@ -271,7 +256,4 @@ public class Computer {
             Board.board[rowBelow][newColumn] = computerPAWN;
         movePerformed = true;
     }
-
 }
-
-
