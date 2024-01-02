@@ -21,7 +21,7 @@ public class GameLogic {
                     System.out.print("Select field row: ");
                     player.movementRow = scanner.nextInt();
                     System.out.print("Select field column: ");
-                    player.movementColumn = scanner.nextInt();
+                    player.movementColumn` = scanner.nextInt();
                     System.out.println();
                     player.performMove();
                 }
