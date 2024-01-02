@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Computer {
@@ -6,50 +8,70 @@ public class Computer {
     final static char computerQueenPawn = '#';
     private boolean movePerformed = false;
 
+
     public void findPawnAndMove() {
+        List<int[]> computerPawns = new ArrayList<>();
+        int highestPriority = Integer.MIN_VALUE;
+        int currentPriority = Integer.MIN_VALUE;
+        int[] bestMove = null;
+
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
                 if (Board.board[i][j] == computerPAWN || Board.board[i][j] == computerQueenPawn) {
-                    movePerformed = false;
-                    System.out.println(i + " / " + j);
-                    int compRow = i;
-                    int compColumn = j;
-                    int rowBelow = compRow + 1;
-                    int twoRowsBelow = compRow + 2;
-                    int threeRowsBelow = compRow + 3;
-                    //int [] queenField = new int[2];
-                    performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
-                    System.out.println("move performed: " + movePerformed);
-
-                    if (movePerformed) {
-                        return;
-                    }
+                    computerPawns.add(new int[]{i, j});
                 }
             }
         }
-        for (int i = 8; i >= 0; i--) {
-            for (int j = 0; j <= 8; j++) {
-                if (Board.board[i][j] == computerPAWN && Board.board[i][j] == computerQueenPawn) {
-                    movePerformed = false;
-                    System.out.println(i + " / " + j);
-                    int compRow = i;
-                    int compColumn = j;
-                    int rowBelow = compRow + 1;
-                    int twoRowsBelow = compRow + 2;
-                    if(isCapturePossible(compColumn, rowBelow, twoRowsBelow)){
-                        capturePawn(compRow, compColumn, rowBelow, twoRowsBelow);
-                    }
-                    else {
-                        jumpToField(compRow, compColumn, rowBelow);
-                    }
 
-                    if (movePerformed) {
-                        return;
-                    }
-                }
+        for (int[] pawnPosition : computerPawns) {
+            movePerformed = false;
+            System.out.println(pawnPosition[0] + " / " + pawnPosition[1]);
+            int compRow = pawnPosition[0];
+            int compColumn = pawnPosition[1];
+            int rowBelow = compRow + 1;
+            int twoRowsBelow = compRow + 2;
+            int threeRowsBelow = compRow + 3;
+
+            performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
+
+            if(movePerformed){
+                System.out.println("move");
+                break;
             }
+            else {
+                currentPriority = calculatePriority(compColumn, compRow, rowBelow, twoRowsBelow, threeRowsBelow);
+            }
+
+            if (currentPriority > highestPriority) {
+                highestPriority = currentPriority;
+                bestMove = pawnPosition.clone();
+            }
+        }
+
+        // Wykonaj najlepszy ruch
+        if (bestMove != null) {
+            System.out.println("BestMove");
+            int compRow = bestMove[0];
+            int compColumn = bestMove[1];
+            int rowBelow = compRow + 1;
+            int twoRowsBelow = compRow + 2;
+            int threeRowsBelow = compRow + 3;
+
+            performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
         }
     }
+
+    private int calculatePriority(int compColumn, int compRow, int rowBelow, int twoRowsBelow, int threeRowsBelow) {
+        int priority = 0;
+        if (isCapturePossible(compColumn, rowBelow, twoRowsBelow) && isRiskAfterCapture(compColumn, compRow, threeRowsBelow)) {
+            priority = 10;
+        }
+        else if (isRiskAfterMove(compColumn, compRow, twoRowsBelow))
+                priority = 5;
+
+            return priority;
+    }
+
     private boolean isMoveInRange(int row, int column) {
         return (row >= 0 && row < 9 && column >= 0 && column < 9);
     }
@@ -114,28 +136,20 @@ public class Computer {
         }
         return false;
     }
-    private boolean isRiskAfterCapture(int compColumn, int compRow, int twoRowsBelow, int threeRowsBelow) {
+    private boolean isRiskAfterCapture(int compColumn, int compRow, int threeRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
             if (compColumn == 3 || compColumn == 4) {
                 int leftColumn = compColumn - 3;
                 int rightColumn = compColumn + 3;
-                return ((isMoveInRange(threeRowsBelow, rightColumn) && (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN )) ||
-                        (isMoveInRange(threeRowsBelow, leftColumn) && (Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN )));
-            } else {
-                int leftColumn = compColumn - 2;
-                int rightColumn = compColumn + 2;
-
-                System.out.println("isRiskAfterCapture compRow = 0 - 4");
-
-                return ((isMoveInRange(twoRowsBelow, leftColumn) && Board.board[twoRowsBelow][leftColumn] == Player.playerPAWN) ||
-                        (isMoveInRange(twoRowsBelow, rightColumn) && Board.board[twoRowsBelow][rightColumn] == Player.playerPAWN));
+                return ((isMoveInRange(threeRowsBelow, rightColumn) && (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN)) ||
+                        (isMoveInRange(threeRowsBelow, leftColumn) && (Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN)));
             }
         }
         return false;
     }
     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, threeRowsBelow)) {
-            if (isRiskAfterCapture(compColumn, compRow, twoRowBelow, threeRowsBelow)) {
+            if (isRiskAfterCapture(compColumn, compRow, threeRowsBelow)) {
                 if (isRiskAfterMove(compColumn, compRow, twoRowBelow)) {
                     capturePawn(compRow, compColumn, rowBelow, twoRowBelow);
                 } else
