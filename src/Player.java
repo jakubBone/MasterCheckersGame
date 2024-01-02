@@ -158,7 +158,7 @@ public class Player {
                 (movementColumn == leftUpAfterCapture || movementColumn == rightUpAfterCapture));
     }
     private boolean isEnemyOnPawnRoad(int diagonalUp, int jumpedField){
-        return (Board.board[rowAbovePawn][diagonalUp] == Computer.COMPUTER_PAWN
+        return (Board.board[rowAbovePawn][diagonalUp] == Computer.computerPAWN
                 && movementColumn == jumpedField);
     }
 }

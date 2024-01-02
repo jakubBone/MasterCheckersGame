@@ -29,12 +29,12 @@ public class Board {
         for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
                 for (int j = 0; j < 8; j++) {
-                    board[i][j] = Computer.COMPUTER_PAWN;
+                    board[i][j] = Computer.computerPAWN;
                     j++;
                 }
             } else {
                 for (int j = 1; j < 8; j++) {
-                    board[i][j] = Computer.COMPUTER_PAWN;
+                    board[i][j] = Computer.computerPAWN;
                     j++;
                 }
             }
@@ -60,7 +60,7 @@ public class Board {
     private void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (!(board[i][j] == Computer.COMPUTER_PAWN) && !(board[i][j] == Player.playerPAWN))
+                if (!(board[i][j] == Computer.computerPAWN) && !(board[i][j] == Player.playerPAWN))
                     board[i][j] = emptyField;
             }
         }
