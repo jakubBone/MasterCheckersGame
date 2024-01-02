@@ -32,4 +32,5 @@ public class GameLogic {
         }
         System.out.println("Game over");
     }
+
 }
