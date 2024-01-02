@@ -9,7 +9,7 @@ public class Computer {
     public void findPawnAndMove() {
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
-                if (Board.board[i][j] == computerPAWN && Board.board[i][j] == computerQueenPawn) {
+                if (Board.board[i][j] == computerPAWN || Board.board[i][j] == computerQueenPawn) {
                     movePerformed = false;
                     System.out.println(i + " / " + j);
                     int compRow = i;
@@ -17,7 +17,7 @@ public class Computer {
                     int rowBelow = compRow + 1;
                     int twoRowsBelow = compRow + 2;
                     int threeRowsBelow = compRow + 3;
-                    int [] queenField = new int[2];
+                    //int [] queenField = new int[2];
                     performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
                     System.out.println("move performed: " + movePerformed);
 
@@ -81,9 +81,9 @@ public class Computer {
                     return true;  // can capture
                 }
             }
-        }
         return false;  // can't capture
-    }
+        }
+
     private void capturePawnWithQueen(int compRow, int newRow, int compColumn, int newColumn){
         for (int i = Math.min(compRow, newRow) + 1; i < Math.max(compRow, newRow); i++) {
             for (int j = Math.min(compColumn, newColumn) + 1; j < Math.max(compColumn, newColumn); j++) {
@@ -119,11 +119,9 @@ public class Computer {
             if (compColumn == 3 || compColumn == 4) {
                 int leftColumn = compColumn - 3;
                 int rightColumn = compColumn + 3;
-                return ((isMoveInRange(threeRowsBelow, rightColumn) && Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN) ||
-                        (isMoveInRange(threeRowsBelow, rightColumn) && Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN) ||
-                        (isMoveInRange(threeRowsBelow, compColumn) && Board.board[threeRowsBelow][compColumn] == Player.playerPAWN));
-            }
-            else {
+                return ((isMoveInRange(threeRowsBelow, rightColumn) && (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN )) ||
+                        (isMoveInRange(threeRowsBelow, leftColumn) && (Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN )));
+            } else {
                 int leftColumn = compColumn - 2;
                 int rightColumn = compColumn + 2;
 
@@ -212,6 +210,7 @@ public class Computer {
         movePerformed = true;
     }
     private boolean isCapturePossible(int compColumn, int rowBelow, int twoRowsBelow) {
+        System.out.println("z");
         int leftAfterCapture = compColumn - 2;
         int rightAfterCapture = compColumn + 2;
             if (compColumn == 0 || compColumn == 1) {
