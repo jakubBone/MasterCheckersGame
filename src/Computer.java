@@ -22,7 +22,6 @@ public class Computer {
                 }
             }
         }
-
         for (int[] pawnPosition : computerPawns) {
             movePerformed = false;
             System.out.println(pawnPosition[0] + " / " + pawnPosition[1]);
@@ -48,15 +47,13 @@ public class Computer {
             }
         }
 
-        // Wykonaj najlepszy ruch
-        if (bestMove != null) {
+        if (!movePerformed && bestMove != null) {
             System.out.println("BestMove");
             int compRow = bestMove[0];
             int compColumn = bestMove[1];
             int rowBelow = compRow + 1;
             int twoRowsBelow = compRow + 2;
             int threeRowsBelow = compRow + 3;
-
             performBestMove(compRow, compColumn, rowBelow, twoRowsBelow, threeRowsBelow);
         }
     }
@@ -78,18 +75,6 @@ public class Computer {
 
     //////////////// Queen move ///////////////////
 
-    private void mainCapture(int compRow, int compColumn, int rowBelow, int twoRowsBelow, int newRow, int newColumn){
-        if(Board.board[compRow][compColumn] == computerPAWN)
-            capturePawn(compRow, compColumn, rowBelow,twoRowsBelow);
-        else if (Board.board[compRow][compColumn] == computerQueenPawn)
-            capturePawnWithQueen(compRow, newRow, compColumn, newColumn);
-    }
-    private void mainJump(int compRow, int compColumn, int rowBelow, int newRow, int newColumn){
-        if(Board.board[compRow][compColumn] == computerPAWN)
-            jumpToField(compRow, compColumn, rowBelow);
-        else if (Board.board[compRow][compColumn] == computerQueenPawn)
-            performJumpQueen(compRow, compColumn, newRow, newColumn);
-    }
     public static boolean canQueenCapture(int compRow, int compColumn) {
         int[][] directions = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
         for (int[] direction : directions) {
@@ -138,7 +123,9 @@ public class Computer {
     }
     private boolean isRiskAfterCapture(int compColumn, int compRow, int threeRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
-            if (compColumn == 3 || compColumn == 4) {
+            if (compColumn == 3 || compColumn == 4 || (compColumn == 2 && !(Board.board[compRow + 1][compColumn - 1] == Player.playerPAWN)) ||
+                    (compColumn == 5 && !(Board.board[compRow + 1][compColumn - 1] == Player.playerPAWN) ||
+                            (compColumn == 6 && !(Board.board[compRow + 1][compColumn + 1] == Player.playerPAWN)))){
                 int leftColumn = compColumn - 3;
                 int rightColumn = compColumn + 3;
                 return ((isMoveInRange(threeRowsBelow, rightColumn) && (Board.board[threeRowsBelow][rightColumn] == Player.playerPAWN || Board.board[threeRowsBelow][compColumn + 1] == Player.playerPAWN)) ||
@@ -147,8 +134,6 @@ public class Computer {
         }
         return false;
     }
-
-
     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, threeRowsBelow)) {
             if (isRiskAfterCapture(compColumn, compRow, threeRowsBelow)) {
@@ -194,7 +179,7 @@ public class Computer {
                                         int columnOnRight, int twoRowsBelow, int leftAfterCapture, int rightAfterCapture) {
         if (isPlayerOnBothSides(compColumn, rowBelow)) {
             System.out.println("both sides");
-            int randomColumn = getRandomColumn(columnOnLeft, columnOnRight);
+            int randomColumn = getRandomColumn(leftAfterCapture, rightAfterCapture);
             if(randomColumn == columnOnLeft && Board.board[twoRowsBelow][leftAfterCapture] == Board.emptyField)
                 performCapture(compRow, columnOnLeft, twoRowsBelow, randomColumn, compColumn);
             else if(randomColumn == columnOnRight && Board.board[twoRowsBelow][rightAfterCapture] == Board.emptyField)
