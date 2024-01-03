@@ -147,12 +147,12 @@ public class Computer {
         }
         return false;
     }
+
+
     private void performBestMove(int compRow, int compColumn, int rowBelow, int twoRowBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, threeRowsBelow)) {
             if (isRiskAfterCapture(compColumn, compRow, threeRowsBelow)) {
-                if (isRiskAfterMove(compColumn, compRow, twoRowBelow)) {
-                    capturePawn(compRow, compColumn, rowBelow, twoRowBelow);
-                } else
+                if (!isRiskAfterMove(compColumn, compRow, twoRowBelow))
                     jumpToField(compRow, compColumn, rowBelow);
             } else
                 capturePawn(compRow, compColumn, rowBelow, twoRowBelow);
@@ -214,7 +214,7 @@ public class Computer {
     private void performCapture(int compRow, int capturedColumn, int twoRowsBelow, int newColumn, int compColumn) {
         Board.board[compRow + 1][capturedColumn] = Board.emptyField;
         Board.board[compRow][compColumn] = Board.emptyField;
-        System.out.println(capturedColumn);
+        System.out.println("captured column: " + capturedColumn);
         if(twoRowsBelow == 7)
             Board.board[twoRowsBelow][newColumn] = computerQueenPawn;
         else
@@ -224,12 +224,9 @@ public class Computer {
         movePerformed = true;
     }
     private boolean isCapturePossible(int compColumn, int rowBelow, int twoRowsBelow) {
-        System.out.println("z");
         int leftAfterCapture = compColumn - 2;
         int rightAfterCapture = compColumn + 2;
             if (compColumn == 0 || compColumn == 1) {
-                System.out.println("X");
-                System.out.println("Y");
                 return isMoveInRange(twoRowsBelow, rightAfterCapture) && isPlayerOnRight(compColumn, rowBelow) && Board.board[twoRowsBelow][rightAfterCapture] == Board.emptyField;
             } else if (compColumn == 6 || compColumn == 7) {
                 return isMoveInRange(twoRowsBelow, leftAfterCapture) && isPlayerOnLeft(compColumn, rowBelow) && Board.board[twoRowsBelow][leftAfterCapture] == Board.emptyField;
