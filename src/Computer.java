@@ -73,43 +73,6 @@ public class Computer {
         return (row >= 0 && row < 9 && column >= 0 && column < 9);
     }
 
-    //////////////// Queen move ///////////////////
-
-    public static boolean canQueenCapture(int compRow, int compColumn) {
-        int[][] directions = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
-        for (int[] direction : directions) {
-            int directionRow = direction[0];
-            int directionColumn = direction[1];
-
-            int newX = compRow + directionRow;
-            int newY = compColumn + directionColumn;
-
-                if (Board.board[newX][newY] != 0 && (Board.board[newX][newY] != Player.playerPAWN || Board.board[newX][newY] != Player.playerQueenPAWN)) {
-                    return true;  // can capture
-                }
-            }
-        return false;  // can't capture
-        }
-
-    private void capturePawnWithQueen(int compRow, int newRow, int compColumn, int newColumn){
-        for (int i = Math.min(compRow, newRow) + 1; i < Math.max(compRow, newRow); i++) {
-            for (int j = Math.min(compColumn, newColumn) + 1; j < Math.max(compColumn, newColumn); j++) {
-                if (Board.board[i][j] != Board.emptyField && Board.board[i][j] != Player.playerPAWN) {
-                    Board.board[i][j] = Board.emptyField;
-                }
-            }
-        }
-        Computer.compPawnNumbers -= 1;
-    }
-    private void performJumpQueen(int compRow, int compColumn, int newRow, int newColumn) {
-        Board.board[compRow][compColumn] = Board.emptyField;
-        Board.board[newRow][newColumn] = computerQueenPawn;
-    }
-
-
-    //////////////// Queen move ///////////////////
-
-
     private boolean isRiskAfterMove(int compColumn, int compRow, int twoRowsBelow) {
         if (compRow >= 0 && compRow <= 4) {
             int leftColumn = compColumn - 2;
