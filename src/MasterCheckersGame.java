@@ -16,7 +16,7 @@ public class MasterCheckersGame {
         Board.board[3][1] = Player.playerPAWN ; // added to Computer test pawn capturing*/
         Board.board[3][5] = Player.playerPAWN ; // added to Computer test pawn capturing*/
         Board.board[2][0] = ' ' ; // added to Computer test pawn capturing*/
-        Board.board[7][1] = Computer.computerQueenPawn ; // added to Computer Queen test pawn capturing*/
+        //Board.board[7][1] = Computer.computerQueenPawn ; // added to Computer Queen test pawn capturing*/
 
         gameLogic.askForMove();
 
