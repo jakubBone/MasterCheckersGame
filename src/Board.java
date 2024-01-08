@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Board {
     final static char[][] board = new char[9][9];
     final static char emptyField = ' ';
@@ -20,11 +22,12 @@ public class Board {
         }
     }
 
-    public void prepareBoard(){
+    public void prepareBoard() {
         locatePlayerPawns();
         locateComputerPawns();
         setEmptyFields();
     }
+
     private void locateComputerPawns() {
         for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
@@ -65,4 +68,18 @@ public class Board {
             }
         }
     }
+
+    public static boolean arePawnsOnFinalSide(char pawn, int startRow, int endRow, int pawnNumbers) {
+        ArrayList<int[]> playerList = new ArrayList<>();
+
+        for (int i = startRow; i < endRow; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == pawn) {
+                    playerList.add(new int[]{i, j});
+                }
+            }
+        }
+        return (playerList.size() == pawnNumbers);
+    }
+
 }
