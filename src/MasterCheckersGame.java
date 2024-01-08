@@ -12,7 +12,7 @@ public class MasterCheckersGame {
         Board.board[0][2] = Player.playerQueenPAWN; // added to Player test pawn capturing
         Board.board[1][3] = ' '; // added to Player test pawn capturing
         Board.board[3][3] = 'O' ; // added to Player test pawn capturing*/
-
+        Board.board[3][3] == Player.playerPAWN;
         Board.board[3][1] = Player.playerPAWN ; // added to Computer test pawn capturing*/
         Board.board[3][5] = Player.playerPAWN ; // added to Computer test pawn capturing*/
         Board.board[2][0] = ' ' ; // added to Computer test pawn capturing*/
