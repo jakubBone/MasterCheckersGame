@@ -18,13 +18,14 @@ public class Player {
         if (isPawnMoveValid()) {
             if (isRowAbovePawnSelected()) {
                 jumpToField();
-            } else if (areTwoRowsAbovePawnSelected()) {
+            } else if (areTwoRowsAbovePawnSelected() && isValidCapture()) {
                 capturePawn();
             }
+            GameLogic.currentPlayer = "Computer";
         } else {
             printMessageOfInvalidMove();
         }
-        GameLogic.currentPlayer = "Computer";
+
     }
     void setFieldsDetials(){
         leftUp = pawnColumn - 1;
@@ -35,12 +36,10 @@ public class Player {
         twoRowsAbovePawn = pawnRow - 2;
     }
     private void capturePawn() {
-            if (isEnemyOnPawnRoad(leftUp, leftUpAfterCapture) && movementColumn >= 0) {
+            if (isEnemyOnPawnRoad(leftUp, leftUpAfterCapture) && movementColumn >= 0)
                 captureEnemyPawn(rowAbovePawn, leftUp);
-            } else if (isEnemyOnPawnRoad(rightUp, rightUpAfterCapture) && movementColumn <= 8) {
+            else if (isEnemyOnPawnRoad(rightUp, rightUpAfterCapture) && movementColumn <= 8)
                 captureEnemyPawn(rowAbovePawn, rightUp);
-            } else
-                System.out.println("There is no enemy pawn in the transition field");
     }
     private void captureEnemyPawn(int row, int column){
         Board.board[row][column] = Board.emptyField;
@@ -53,18 +52,22 @@ public class Player {
     }
     private void printMessageOfInvalidMove() {
         if (isPawnMoveTooHigh())
-            System.out.println("The movement is too high");
+            System.out.println("The movement is too high. Please try again ;) \n");
         else if (!(isMoveUpward()))
-            System.out.println("Only upward movement is allowed");
+            System.out.println("Only upward movement allowed. Please try again ;) \n");
         else if (!(isSelectedFieldEmpty()))
-            System.out.println("The selected field is not empty");
+            System.out.println("The selected field is not empty. Please try again ;) \n");
         else if (!(isPawnMoveDiagonal()))
-            System.out.println("The move is not diagonal");
+            System.out.println("The move is not diagonal. Please try again ;) \n");
         else
-            System.out.println("Invalid move");
+            System.out.println("The is no enemy in transition. Please try again ;) \n");
     }
     private boolean isPawnMoveValid() {
         return (isMoveUpward() && isPawnMoveDiagonal() && isSelectedFieldEmpty());
+    }
+
+    private boolean isValidCapture(){
+        return (isEnemyOnPawnRoad(leftUp, leftUpAfterCapture) || isEnemyOnPawnRoad(rightUp, rightUpAfterCapture));
     }
     private boolean isPawnMoveDiagonal() {
         return (!(movementColumn == pawnColumn) && !(movementRow == pawnRow));

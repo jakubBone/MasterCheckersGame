@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class GameLogic {
@@ -9,32 +11,54 @@ public class GameLogic {
 
     public void askForMove() {
         while (Computer.compPawnNumbers > 0 && Player.playerPawnNumbers > 0 &&
-                !(board.arePawnsOnFinalSide(Player.playerPAWN, 3,7)) &&
-                !(board.arePawnsOnFinalSide(Computer.computerPAWN, 0,4))) {
-            //if true
-            System.out.println(board.arePawnsOnFinalSide(Player.playerPAWN, 3, 7));
+                !(board.arePawnsOnFinalSide(Player.playerPAWN, 2, 7)) &&
+                !(board.arePawnsOnFinalSide(Computer.computerPAWN, 0, 5))) {
+
             Board.printBoard();
-            System.out.println("WHICH PAWN TO CHOOSE?");
-            System.out.print("Select pawn row: ");
-            player.pawnRow = scanner.nextInt();
-            System.out.print("Select pawn column: ");
-            player.pawnColumn = scanner.nextInt();
-            if (player.ifPawnSelected()) {
-                System.out.println();
-                while (currentPlayer.equals("Human")) {
-                    System.out.println("WHICH FIELD TO MOVE?");
-                    System.out.print("Select field row: ");
+            boolean validMove = false;
+
+            while (!validMove) {
+                try {
+                    System.out.println("SELECT PAWN:");
+                    System.out.print("Row: ");
+                    player.pawnRow = scanner.nextInt();
+                    System.out.print("Column: ");
+                    player.pawnColumn = scanner.nextInt();
+
+                    if (player.ifPawnSelected()) {
+                        validMove = true;
+                    } else {
+                        System.out.println("It's not your pawn. Please try again ;) \n");
+
+                    }
+                } catch (java.util.InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter an integer ;) \n");
+                    scanner.next();
+                }
+            }
+
+            // Ruch pionem
+            while (currentPlayer.equals("Human")) {
+                try {
+                    System.out.println("MOVE TO: ");
+                    System.out.print("Row: ");
                     player.movementRow = scanner.nextInt();
-                    System.out.print("Select field column: ");
+                    System.out.print("Column: ");
                     player.movementColumn = scanner.nextInt();
                     System.out.println();
                     player.performPawnMove();
+                    //currentPlayer = "Computer";
+                } catch (java.util.InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter an integer. \n");
+                    scanner.next();
                 }
-            } else
-                System.out.println("Incorrect choice. It's not your pawn");
+            }
+
             computer.findPawnAndMove();
             currentPlayer = "Human";
         }
+
         System.out.println("Game over");
     }
+
 }
