@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.util.InputMismatchException;
+
 import java.util.Scanner;
 
 public class GameLogic {
@@ -53,12 +52,15 @@ public class GameLogic {
                     scanner.next();
                 }
             }
-
             computer.findPawnAndMove();
             currentPlayer = "Human";
         }
-
-        System.out.println("Game over");
+        board.printGameOverMessage();
     }
 
+
+
+
 }
+
+

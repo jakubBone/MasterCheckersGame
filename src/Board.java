@@ -74,4 +74,17 @@ public class Board {
             }
             return (playerList.isEmpty());
         }
+    public void printGameOverMessage(){
+        System.out.println();
+        System.out.println(">>> Game over <<< \n");
+            if(Player.playerPawnNumbers == 0)
+                System.out.println("You lost... Computer captured all of your pawns :(");
+            else if(Computer.compPawnNumbers == 0)
+                System.out.println("Congratulations, you won! All of computer's pawns captured! :)");
+            else if(arePawnsOnFinalSide(Player.playerPAWN, 2, 7))
+                System.out.println("You won! All of your pawns in the computer's side :)");
+            else if (arePawnsOnFinalSide(Computer.computerPAWN, 0, 5))
+                System.out.println("You lost...All of computer's pawns in your side :( ");
+    }
+
 }
