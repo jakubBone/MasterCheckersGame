@@ -220,8 +220,6 @@ public class Computer {
         }
     }
 
-
-
     private boolean isPlayerOnleftAfterCaputre(int compColumn, int threeRowsBelow, int leftColumn){
         return (Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN
                 || Board.board[threeRowsBelow][compColumn - 1] == Player.playerPAWN);

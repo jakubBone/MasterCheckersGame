@@ -21,13 +21,11 @@ public class Board {
             System.out.print("+\n");
         }
     }
-
     public void prepareBoard() {
         locatePlayerPawns();
         locateComputerPawns();
         setEmptyFields();
     }
-
     private void locateComputerPawns() {
         for (int i = 0; i < 3; i++) {
             if (i % 2 == 0) {
@@ -43,7 +41,6 @@ public class Board {
             }
         }
     }
-
     private void locatePlayerPawns() {
         for (int i = 5; i < 8; i++) {
             if (i % 2 == 0) {
@@ -59,7 +56,6 @@ public class Board {
             }
         }
     }
-
     private void setEmptyFields() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -68,18 +64,14 @@ public class Board {
             }
         }
     }
-
-    public static boolean arePawnsOnFinalSide(char pawn, int startRow, int endRow, int pawnNumbers) {
-        ArrayList<int[]> playerList = new ArrayList<>();
-
-        for (int i = startRow; i < endRow; i++) {
+    public boolean arePawnsOnFinalSide(char pawn, int startRow, int endRow) {
+        ArrayList<Character> playerList = new ArrayList<>();
+        for (int i = startRow; i <= endRow; i++) {
             for (int j = 0; j < 8; j++) {
-                if (board[i][j] == pawn) {
-                    playerList.add(new int[]{i, j});
+                    if(board[i][j] == pawn)
+                        playerList.add(board[i][j]);
                 }
             }
+            return (playerList.isEmpty());
         }
-        return (playerList.size() == pawnNumbers);
-    }
-
 }

@@ -5,11 +5,14 @@ public class GameLogic {
     public static String currentPlayer = "Human";
     Computer computer = new Computer();
     Player player = new Player();
+    Board board = new Board();
 
     public void askForMove() {
-        while (Computer.compPawnNumbers > 0 || Player.playerPawnNumbers > 0 ||
-                Board.arePawnsOnFinalSide(Player.playerPAWN, 0,2, Player.playerPawnNumbers) ||
-                Board.arePawnsOnFinalSide(Computer.computerPAWN, 6,8, Computer.compPawnNumbers)) {
+        while (Computer.compPawnNumbers > 0 && Player.playerPawnNumbers > 0 &&
+                !(board.arePawnsOnFinalSide(Player.playerPAWN, 3,7)) &&
+                !(board.arePawnsOnFinalSide(Computer.computerPAWN, 0,4))) {
+            //if true
+            System.out.println(board.arePawnsOnFinalSide(Player.playerPAWN, 3, 7));
             Board.printBoard();
             System.out.println("WHICH PAWN TO CHOOSE?");
             System.out.print("Select pawn row: ");
@@ -34,5 +37,4 @@ public class GameLogic {
         }
         System.out.println("Game over");
     }
-
 }
