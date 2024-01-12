@@ -17,7 +17,7 @@ public class Player {
         if (isPawnMoveValid()) {
             if (isRowAbovePawnSelected()) {
                 jumpToField();
-            } else if (areTwoRowsAbovePawnSelected() && isValidCapture()) {
+            } else if (areTwoRowsAbovePawnSelected()) {
                 capturePawn();
             }
             GameLogic.currentPlayer = "Computer";
@@ -62,12 +62,17 @@ public class Player {
             System.out.println("The is no enemy in transition. Please try again ;) \n");
     }
     private boolean isPawnMoveValid() {
-        return (isMoveUpward() && isPawnMoveDiagonal() && isSelectedFieldEmpty());
+        if(isRowAbovePawnSelected()) {
+            return (isMoveUpward() && isPawnMoveDiagonal() && isSelectedFieldEmpty());
+        } else if(areTwoRowsAbovePawnSelected()) {
+            if (movementColumn == leftUpAfterCapture)
+                return (isEnemyOnPawnRoad(leftUp, leftUpAfterCapture));
+            else if (movementColumn == rightUpAfterCapture)
+                return isEnemyOnPawnRoad(rightUp, rightUpAfterCapture);
+        }
+        return false;
     }
 
-    private boolean isValidCapture(){
-        return (isEnemyOnPawnRoad(leftUp, leftUpAfterCapture) || isEnemyOnPawnRoad(rightUp, rightUpAfterCapture));
-    }
     private boolean isPawnMoveDiagonal() {
         return (!(movementColumn == pawnColumn) && !(movementRow == pawnRow));
     }
