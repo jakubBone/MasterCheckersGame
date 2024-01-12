@@ -8,6 +8,57 @@ public class GameLogic {
     Player player = new Player();
     Board board = new Board();
 
+
+    public void playGame(){
+        System.out.println("Welcome in the MasterCheckersGame \n ");
+
+
+        while (true) {
+            System.out.println("Let's play the game!");
+            System.out.println("Start game: 1");
+            System.out.println("The rules: 2");
+            System.out.println("Exit: 0");
+            System.out.print("Enter: ");
+            String input = scanner.nextLine();
+
+            switch (input) {
+                case "0":
+                    System.out.println("Bye bye!");
+                    return;
+                case "1":
+                    askForMove();
+                    return;
+                case "2":
+                    System.out.println("Rules printing... \n");
+                    break;
+                default:
+                    System.out.println("Error, please try again.");
+                    break;
+            }
+
+        }
+    }
+
+        /*while(scanner.hasNextInt()){
+            //int input = scanner.nextInt();
+            String input = String.valueOf(scanner.nextLine());
+            switch (input) {
+                case "1" :
+                    askForMove();
+                    break;
+                case "2" :
+                    System.out.println("Rules printing...");
+                    break;
+                case "0" :
+                    System.out.println("Bye bye!");
+                    return;
+                default:
+                    System.out.print("Error try again: ");
+            }
+        }*/
+
+
+
     public void askForMove() {
         while (Computer.compPawnNumbers > 0 && Player.playerPawnNumbers > 0 &&
                 !(board.arePawnsOnFinalSide(Player.playerPAWN, 2, 7)) &&
@@ -55,6 +106,8 @@ public class GameLogic {
             computer.findPawnAndMove();
             currentPlayer = "Human";
         }
+        System.out.println(Player.playerPawnNumbers);
+        System.out.println(Computer.compPawnNumbers);
         board.printGameOverMessage();
     }
 

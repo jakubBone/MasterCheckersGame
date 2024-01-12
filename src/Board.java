@@ -66,7 +66,7 @@ public class Board {
     }
     public boolean arePawnsOnFinalSide(char pawn, int startRow, int endRow) {
         ArrayList<Character> playerList = new ArrayList<>();
-        for (int i = startRow; i <= endRow; i++) {
+        for (int i = startRow; i <= endRow; i++) { // 2 i 7
             for (int j = 0; j < 8; j++) {
                     if(board[i][j] == pawn)
                         playerList.add(board[i][j]);

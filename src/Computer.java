@@ -134,6 +134,7 @@ public class Computer {
                 Board.board[compRow][compColumn] = Board.emptyField;
                 Board.board[rowBelow][leftColumn] = Board.emptyField;
                 Board.board[twoRowsBelow][leftColumn - 1] = Computer.computerPAWN;
+                Player.playerPawnNumbers -= 1;
                 System.out.println("capture on left");
                 GameLogic.currentPlayer = "Human";
                 movePerformed = true;
@@ -142,6 +143,7 @@ public class Computer {
                 Board.board[compRow][compColumn] = Board.emptyField;
                 Board.board[rowBelow][rightColumn] = Board.emptyField;
                 Board.board[twoRowsBelow][rightColumn + 1] = Computer.computerPAWN;
+                Player.playerPawnNumbers -= 1;
                 System.out.println("capture on right");
                 GameLogic.currentPlayer = "Human";
                 movePerformed = true;
@@ -151,6 +153,7 @@ public class Computer {
                     Board.board[compRow][compColumn] = Board.emptyField;
                     Board.board[rowBelow][leftColumn] = Board.emptyField;
                     Board.board[twoRowsBelow][leftColumn - 1] = Computer.computerPAWN;
+                    Player.playerPawnNumbers -= 1;
                     System.out.println("Both: capture on left");
                     GameLogic.currentPlayer = "Human";
                     movePerformed = true;
@@ -159,6 +162,7 @@ public class Computer {
                     Board.board[compRow][compColumn] = Board.emptyField;
                     Board.board[rowBelow][rightColumn] = Board.emptyField;
                     Board.board[rowBelow][rightColumn + 1] = Computer.computerPAWN;
+                    Player.playerPawnNumbers -= 1;
                     System.out.println("Both: capture on right");
                     GameLogic.currentPlayer = "Human";
                     movePerformed = true;
@@ -172,6 +176,7 @@ public class Computer {
                         Board.board[compRow][leftColumn] = Board.emptyField;
                     else
                         Board.board[compRow][rightColumn] = Board.emptyField;
+                    Player.playerPawnNumbers -= 1;
                     System.out.println("moved randomly");
                     GameLogic.currentPlayer = "Human";
                     movePerformed = true;
@@ -179,7 +184,6 @@ public class Computer {
                 }
             }
         }
-
     }
 
     private void captureOnSides(int compRow, int compColumn, int rowBelow) {
@@ -208,12 +212,13 @@ public class Computer {
                 movePerformed = true;
                 System.out.println("Capture performed");
             } else
-                System.out.println("??");
+                System.out.println("Out of range in Capture on side");
         }
     }
 
     private int calculatePriority(int compColumn, int compRow, int rowBelow, int twoRowsBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, twoRowsBelow)) {
+            System.out.println("CAPTURE POSSIBLE");
             return isRiskAfterCapture(compRow,compColumn, rowBelow, threeRowsBelow) ? 5 : 10;
         } else {
             return isRiskAfterMove(compRow, compColumn, twoRowsBelow) ? 4 : 8;
@@ -236,7 +241,7 @@ public class Computer {
     private boolean isRiskAfterCapture(int compRow, int compColumn, int rowBelow, int threeRowsBelow) {
         int leftColumn = compColumn - 3;
         int rightColumn = compColumn + 3;
-        System.out.println("ass");
+        System.out.println("AS");
         //if (compRow >= 0 && compRow <= 4 && isMoveInRange(threeRowsBelow, leftColumn) || isMoveInRange(threeRowsBelow, rightColumn)) {
         if (compRow >= 0 && compRow <= 4 && (isMoveInRange(threeRowsBelow, leftColumn) || isMoveInRange(threeRowsBelow, rightColumn))) {
             System.out.println("X");
@@ -246,16 +251,18 @@ public class Computer {
                 } else if (isPlayerOnLeft(compColumn, rowBelow)) {
                     return isPlayerOnleftAfterCaputre(compColumn, threeRowsBelow, leftColumn);
                 } else if (isPlayerOnRight(compColumn, rowBelow)) {
+                    System.out.println("XX");
                     return isPlayerOnRightAfterCaputre(compColumn, threeRowsBelow, rightColumn);
                 }
             }
             else if(compColumn == 0 || compColumn == 1 || compColumn == 2){
                 if(isPlayerOnRight(compColumn, rowBelow)){
-                    isPlayerOnRightAfterCaputre(compColumn, threeRowsBelow, rightColumn);
+                    System.out.println("XXX");
+                    return isPlayerOnRightAfterCaputre(compColumn, threeRowsBelow, rightColumn);
                 }
             }
             else if(compColumn == 5 || compColumn == 6 || compColumn == 7){
-                    System.out.println("ass2");
+                    System.out.println("XYZ");
                 if (isPlayerOnLeft(compColumn, rowBelow)) {
                     return isPlayerOnleftAfterCaputre( compColumn, threeRowsBelow, leftColumn);
                 }
@@ -265,7 +272,7 @@ public class Computer {
         }
 
     private boolean isRiskAfterMove(int compRow, int compColumn, int twoRowsBelow) {
-        if (compRow >= 0 && compRow <= 4) {
+        if (compRow >= 0 && compRow <= 5) { // 5 zamiast 4
             int leftColumn = compColumn - 2;
             int rightColumn = compColumn + 2;
 
@@ -280,7 +287,7 @@ public class Computer {
         int leftAfterCapture = compColumn - 2;
         int rightAfterCapture = compColumn + 2;
 
-        if (isMoveInRange(twoRowsBelow, leftAfterCapture) && isMoveInRange(twoRowsBelow, rightAfterCapture)) {
+        if (isMoveInRange(twoRowsBelow, leftAfterCapture) || isMoveInRange(twoRowsBelow, rightAfterCapture)) {
             if (compColumn == 0 || compColumn == 1) {
                 return isPlayerOnRight(compColumn, rowBelow) && Board.board[twoRowsBelow][rightAfterCapture] == Board.emptyField;
             } else if((compColumn == 6 || compColumn == 7)){
