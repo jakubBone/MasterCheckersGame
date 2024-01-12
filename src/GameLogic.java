@@ -64,11 +64,13 @@ public class GameLogic {
                 !(board.arePawnsOnFinalSide(Player.playerPAWN, 2, 7)) &&
                 !(board.arePawnsOnFinalSide(Computer.computerPAWN, 0, 5))) {
 
-            Board.printBoard();
+                        Board.printBoard();
             boolean validMove = false;
 
             while (!validMove) {
                 try {
+                    System.out.println("COMPUTER: " + Player.playerPawnNumbers);
+                    System.out.println("PLAYER: " + Computer.compPawnNumbers);
                     System.out.println("SELECT PAWN:");
                     System.out.print("Row: ");
                     player.pawnRow = scanner.nextInt();
@@ -106,8 +108,6 @@ public class GameLogic {
             computer.findPawnAndMove();
             currentPlayer = "Human";
         }
-        System.out.println(Player.playerPawnNumbers);
-        System.out.println(Computer.compPawnNumbers);
         board.printGameOverMessage();
     }
 

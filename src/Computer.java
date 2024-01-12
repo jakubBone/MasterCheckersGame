@@ -5,9 +5,7 @@ import java.util.Random;
 public class Computer {
     final static char computerPAWN = 'X';
     static int compPawnNumbers = 12;
-    final static char computerQueenPawn = '#';
     private boolean movePerformed = false;
-
 
     public void findPawnAndMove() {
         List<int[]> computerPawns = new ArrayList<>();
@@ -16,7 +14,7 @@ public class Computer {
 
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
-                if (Board.board[i][j] == computerPAWN || Board.board[i][j] == computerQueenPawn) {
+                if (Board.board[i][j] == computerPAWN ) {
                     computerPawns.add(new int[]{i, j});
                 }
             }
@@ -129,7 +127,71 @@ public class Computer {
     private void capture(int compRow, int compColumn, int rowBelow, int twoRowsBelow) {
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
+        System.out.println("XXXX");
+
+            if (isMoveInRange(compRow, leftColumn) && isPlayerOnLeft(compColumn, rowBelow) && Board.board[twoRowsBelow][leftColumn - 1] == Board.emptyField) {
+                System.out.println("XXXXX right");
+                Board.board[compRow][compColumn] = Board.emptyField;
+                Board.board[rowBelow][leftColumn] = Board.emptyField;
+                Board.board[twoRowsBelow][leftColumn - 1] = Computer.computerPAWN;
+                Player.playerPawnNumbers -= 1;
+                System.out.println("capture on left");
+                GameLogic.currentPlayer = "Human";
+                movePerformed = true;
+                System.out.println("Move performed");
+            } else if (isMoveInRange(rowBelow, rightColumn) && isPlayerOnRight(compColumn, rowBelow) && Board.board[twoRowsBelow][rightColumn + 1] == Board.emptyField) {
+                System.out.println("XXXXX left");
+                Board.board[compRow][compColumn] = Board.emptyField;
+                Board.board[rowBelow][rightColumn] = Board.emptyField;
+                Board.board[twoRowsBelow][rightColumn + 1] = Computer.computerPAWN;
+                Player.playerPawnNumbers -= 1;
+                System.out.println("capture on right");
+                GameLogic.currentPlayer = "Human";
+                movePerformed = true;
+                System.out.println("Move performed");
+            } else if (isPlayerOnBothSides(compColumn, rowBelow) && isMoveInRange(compRow, leftColumn) && isMoveInRange(rowBelow, rightColumn)) { // BOTH
+                System.out.println("XXXXX both");
+                if (Board.board[twoRowsBelow][leftColumn - 1] == Board.emptyField) { //left
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][leftColumn] = Board.emptyField;
+                    Board.board[twoRowsBelow][leftColumn - 1] = Computer.computerPAWN;
+                    Player.playerPawnNumbers -= 1;
+                    System.out.println("Both: capture on left");
+                    GameLogic.currentPlayer = "Human";
+                    movePerformed = true;
+                    System.out.println("Move performed");
+                } else if (Board.board[twoRowsBelow][rightColumn + 1] == Board.emptyField) { //right
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][rightColumn] = Board.emptyField;
+                    Board.board[rowBelow][rightColumn + 1] = Computer.computerPAWN;
+                    Player.playerPawnNumbers -= 1;
+                    System.out.println("Both: capture on right");
+                    GameLogic.currentPlayer = "Human";
+                    movePerformed = true;
+                    System.out.println("Move performed");
+                } else if (Board.board[twoRowsBelow][leftColumn - 1] == Board.emptyField &&
+                        Board.board[twoRowsBelow][rightColumn + 1] == Board.emptyField ) { //both
+                    int randomColumn = getRandomColumn(leftColumn - 1, rightColumn + 1);
+                    Board.board[compRow][compColumn] = Board.emptyField;
+                    Board.board[rowBelow][randomColumn] = computerPAWN;
+                    if(randomColumn == leftColumn - 1)
+                        Board.board[compRow][leftColumn] = Board.emptyField;
+                    else
+                        Board.board[compRow][rightColumn] = Board.emptyField;
+                    Player.playerPawnNumbers -= 1;
+                    System.out.println("moved randomly");
+                    GameLogic.currentPlayer = "Human";
+                    movePerformed = true;
+                    System.out.println("Move performed");
+                }
+            }
+    }
+    /*private void capture(int compRow, int compColumn, int rowBelow, int twoRowsBelow) {
+        int leftColumn = compColumn - 1;
+        int rightColumn = compColumn + 1;
+        System.out.println("XXXX");
         if(isMoveInRange(compRow, leftColumn) && isMoveInRange(rowBelow, rightColumn)){
+            System.out.println("XXXXX");
             if (isPlayerOnLeft(compColumn, rowBelow) && Board.board[twoRowsBelow][leftColumn - 1] == Board.emptyField) {
                 Board.board[compRow][compColumn] = Board.emptyField;
                 Board.board[rowBelow][leftColumn] = Board.emptyField;
@@ -184,7 +246,7 @@ public class Computer {
                 }
             }
         }
-    }
+    }*/
 
     private void captureOnSides(int compRow, int compColumn, int rowBelow) {
         int twoRowsBelow = compRow + 2;
@@ -219,11 +281,28 @@ public class Computer {
     private int calculatePriority(int compColumn, int compRow, int rowBelow, int twoRowsBelow, int threeRowsBelow) {
         if (isCapturePossible(compColumn, rowBelow, twoRowsBelow)) {
             System.out.println("CAPTURE POSSIBLE");
-            return isRiskAfterCapture(compRow,compColumn, rowBelow, threeRowsBelow) ? 5 : 10;
+            if(isRiskAfterCapture(compRow, compColumn, rowBelow, threeRowsBelow)){
+                if(!isRiskAfterMove(compColumn, compColumn, twoRowsBelow)){
+                    return 8;
+                }
+                else
+                    return 4;
+            } else
+                return 10;
         } else {
             return isRiskAfterMove(compRow, compColumn, twoRowsBelow) ? 4 : 8;
         }
     }
+
+    // ewentulanie moveOnSide
+    /*private int calculatePriority(int compColumn, int compRow, int rowBelow, int twoRowsBelow, int threeRowsBelow) {
+        if (isCapturePossible(compColumn, rowBelow, twoRowsBelow)) {
+            System.out.println("CAPTURE POSSIBLE");
+            return isRiskAfterCapture(compRow,compColumn, rowBelow, threeRowsBelow) ? 5 : 10;
+        } else {
+            return isRiskAfterMove(compRow, compColumn, twoRowsBelow) ? 4 : 8;
+        }
+    }*/
 
     private boolean isPlayerOnleftAfterCaputre(int compColumn, int threeRowsBelow, int leftColumn){
         return (Board.board[threeRowsBelow][leftColumn] == Player.playerPAWN
@@ -305,6 +384,7 @@ public class Computer {
     private boolean isMoveInRange(int row, int column) {
         return (row >= 0 && row < 9 && column >= 0 && column < 9);
     }
+
 
     private boolean isPlayerOnLeft(int compColumn, int rowBelow) {
         System.out.println("1-2");

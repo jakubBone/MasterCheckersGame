@@ -11,7 +11,6 @@ public class Player {
     private int twoRowsAbovePawn;
     final static char playerPAWN  = 'O';
     static int playerPawnNumbers = 12;
-    final static char playerQueenPAWN = '@';
 
     public void performPawnMove() {
         setFieldsDetials();
