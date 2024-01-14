@@ -1,5 +1,3 @@
-
-
 public class MasterCheckersGame {
     public static void main(String[] args) {
 

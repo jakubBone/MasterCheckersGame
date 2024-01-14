@@ -27,7 +27,6 @@ public class Computer {
             int rowBelow = row + 1;
             int twoRowsBelow = row + 2;
 
-            System.out.println(pawnPosition[0] + " || " + pawnPosition[1]);
             captureOnSideIfPossible(row, column, rowBelow, twoRowsBelow);
             if(movePerformed)
                 break;
