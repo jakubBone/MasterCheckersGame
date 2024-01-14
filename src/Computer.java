@@ -5,7 +5,6 @@ public class Computer {
     final static char computerPAWN = 'X';
     static int compPawnNumbers = 12;
     private boolean movePerformed = false;
-
     public void findPawnAndMove() {
         List<int[]> computerPawns = new ArrayList<>();
         ArrayList<int[]> pawnsPriority = new ArrayList<>();
@@ -13,11 +12,14 @@ public class Computer {
 
         for (int i = 8; i >= 0; i--) {
             for (int j = 0; j <= 8; j++) {
-                if (Board.board[i][j] == computerPAWN ) {
+                if (Board.board[i][j] == computerPAWN) {
                     computerPawns.add(new int[]{i, j});
                 }
             }
         }
+        performMove(computerPawns, pawnsPriority, currentPriority);
+    }
+    private void performMove(List<int[]> computerPawns, ArrayList<int[]> pawnsPriority,int currentPriority){
         System.out.println("Step 1");
         for(int[] pawnPosition : computerPawns) {
             movePerformed = false;
@@ -28,8 +30,13 @@ public class Computer {
             if(movePerformed)
                 break;
         }
+        setAndSortPriority(computerPawns, pawnsPriority, currentPriority);
+        findBestMove(pawnsPriority);
+
+    }
+    private void setAndSortPriority(List<int[]> computerPawns, ArrayList<int[]> pawnsPriority, int currentPriority) {
         System.out.println("Step 2");
-        if(!movePerformed){
+        if (!movePerformed) {
             System.out.println("In Step 2");
             // Set all pawns priority
             for (int[] pawnPosition : computerPawns) {
@@ -42,8 +49,7 @@ public class Computer {
                 int threeRowsBelow = compRow + 3;
 
                 currentPriority = calculatePriority(compColumn, compRow, rowBelow, twoRowsBelow, threeRowsBelow);
-                pawnsPriority.add(new int[]{compRow,compColumn, currentPriority});
-
+                pawnsPriority.add(new int[]{compRow, compColumn, currentPriority});
             }
             // Sort pawns by priority
             int n = pawnsPriority.size();
@@ -63,33 +69,29 @@ public class Computer {
                 int priorityScore = sortedPawn[2];
                 System.out.println("Row: " + row + ", Column: " + column + ", Movement priority: " + priorityScore);
             }
-
-            // Find the best pawn to move
-            int counter = 0;
-            while(counter < pawnsPriority.size() && !movePerformed){
-                int[] bestPriorityPawn = pawnsPriority.get(counter);
-                int bestRow = bestPriorityPawn[0];
-                int bestColumn = bestPriorityPawn[1];
-                System.out.print("BestMove: ");
-                System.out.println("[" + bestRow + "][" + bestColumn + "]");
-
-                int rowBelow = bestRow + 1;
-                int twoRowsBelow = bestRow + 2;
-
-                if (bestPriorityPawn[2] == 10)
-                    capture(bestRow, bestColumn, rowBelow, twoRowsBelow);
-                else if(bestPriorityPawn[2] == 8)
-                    move(bestRow, bestColumn, rowBelow);
-                else if(bestPriorityPawn[2] == 5)
-                    capture(bestRow, bestColumn, rowBelow, twoRowsBelow);
-                else if(bestPriorityPawn[2] == 4)
-                    move(bestRow, bestColumn, rowBelow);
-
-                counter++;
-            }
         }
     }
-    private void move(int compRow, int compColumn, int rowBelow){
+    private void findBestMove(ArrayList<int[]> pawnsPriority) {
+        int counter = 0;
+        while(counter < pawnsPriority.size() && !movePerformed){
+            int[] bestPriorityPawn = pawnsPriority.get(counter);
+            int bestRow = bestPriorityPawn[0];
+            int bestColumn = bestPriorityPawn[1];
+            System.out.print("BestMove: ");
+            System.out.println("[" + bestRow + "][" + bestColumn + "]");
+
+            int rowBelow = bestRow + 1;
+            int twoRowsBelow = bestRow + 2;
+
+            if (bestPriorityPawn[2] == 10 || bestPriorityPawn[2] == 5)
+                handleCapture(bestRow, bestColumn, rowBelow, twoRowsBelow);
+            else if (bestPriorityPawn[2] == 8 || bestPriorityPawn[2] == 4)
+                handleMove(bestRow, bestColumn, rowBelow);
+            counter++;
+        }
+    }
+
+    private void handleMove(int compRow, int compColumn, int rowBelow){
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
         System.out.println(isMoveInRange(rowBelow, leftColumn)+ " " + " " + isMoveInRange(rowBelow, rightColumn));
@@ -123,39 +125,7 @@ public class Computer {
             System.out.println("Move performed");
         }
     }
-
-    /*private void move(int compRow, int compColumn, int rowBelow){
-        int leftColumn = compColumn - 1;
-        int rightColumn = compColumn + 1;
-        if(isMoveInRange(rowBelow, leftColumn) || isMoveInRange(rowBelow, rightColumn)) {
-        System.out.println(isMoveInRange(rowBelow, leftColumn)+ " " + " " + isMoveInRange(rowBelow, rightColumn));
-            System.out.println("MOVE");
-            if(Board.board[rowBelow][leftColumn] == Board.emptyField){
-                Board.board[compRow][compColumn] = Board.emptyField;
-                Board.board[rowBelow][leftColumn] = computerPAWN;
-                System.out.println("moved to left");
-                GameLogic.currentPlayer = "Human";
-                movePerformed = true;
-                System.out.println("Move performed");
-            } else if (Board.board[rowBelow][rightColumn] == Board.emptyField){
-                Board.board[compRow][compColumn] = Board.emptyField;
-                Board.board[rowBelow][rightColumn] = computerPAWN;
-                System.out.println("moved to right");
-                GameLogic.currentPlayer = "Human";
-                movePerformed = true;
-                System.out.println("Move performed");
-            } else if(Board.board[rowBelow][leftColumn] == Board.emptyField && Board.board[rowBelow][rightColumn] == Board.emptyField){
-                int randomColumn = getRandomColumn(leftColumn, rightColumn);
-                Board.board[compRow][compColumn] = Board.emptyField;
-                Board.board[rowBelow][randomColumn] = computerPAWN;
-                System.out.println("moved randomly");
-                GameLogic.currentPlayer = "Human";
-                movePerformed = true;
-                System.out.println("Move performed");
-            }
-        }
-    }*/
-    private void capture(int compRow, int compColumn, int rowBelow, int twoRowsBelow) {
+    private void handleCapture(int compRow, int compColumn, int rowBelow, int twoRowsBelow) {
         int leftColumn = compColumn - 1;
         int rightColumn = compColumn + 1;
         System.out.println("XXXX");
