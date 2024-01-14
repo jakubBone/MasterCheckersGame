@@ -45,8 +45,8 @@ public class GameLogic {
 
             while (!validMove) {
                 try {
-                    System.out.println("Computer Pawns: " + Player.playerPawnNumbers);
-                    System.out.println("Player Pawns: " + Computer.compPawnNumbers);
+                    System.out.println("Player Pawns: " + Player.playerPawnNumbers);
+                    System.out.println("Computer Pawns: " + Computer.compPawnNumbers);
                     System.out.println("SELECT PAWN:");
                     System.out.print("Row: ");
                     player.pawnRow = scanner.nextInt();
