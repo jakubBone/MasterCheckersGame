@@ -15,16 +15,13 @@ public class Player {
     public void performPawnMove() {
         setFieldsDetials();
         if (isPawnMoveValid()) {
-            if (isRowAbovePawnSelected()) {
+            if (isRowAbovePawnSelected())
                 jumpToField();
-            } else if (areTwoRowsAbovePawnSelected()) {
+            else if (areTwoRowsAbovePawnSelected())
                 capturePawn();
-            }
             GameLogic.currentPlayer = "Computer";
-        } else {
+        } else
             printMessageOfInvalidMove();
-        }
-
     }
     void setFieldsDetials(){
         leftUp = pawnColumn - 1;

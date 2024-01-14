@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Board {
     final static char[][] board = new char[9][9];
     final static char emptyField = ' ';
-
     public static void printBoard() {
         System.out.println("    0   1   2   3   4   5   6   7");
         System.out.print("  ");
@@ -73,7 +72,7 @@ public class Board {
                 }
             }
             return (playerList.isEmpty());
-        }
+    }
     public void printGameOverMessage(){
         System.out.println();
         System.out.println(">>> Game over <<< \n");
@@ -86,5 +85,4 @@ public class Board {
             else if (arePawnsOnFinalSide(Computer.computerPAWN, 0, 5))
                 System.out.println("You lost...All of computer's pawns in your side :( ");
     }
-
 }

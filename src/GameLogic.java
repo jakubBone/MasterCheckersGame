@@ -8,10 +8,8 @@ public class GameLogic {
     Player player = new Player();
     Board board = new Board();
 
-
     public void playGame(){
         System.out.println("Welcome in the MasterCheckersGame \n ");
-
 
         while (true) {
             System.out.println("Let's play the game!");
@@ -35,36 +33,14 @@ public class GameLogic {
                     System.out.println("Error, please try again.");
                     break;
             }
-
         }
     }
-
-        /*while(scanner.hasNextInt()){
-            //int input = scanner.nextInt();
-            String input = String.valueOf(scanner.nextLine());
-            switch (input) {
-                case "1" :
-                    askForMove();
-                    break;
-                case "2" :
-                    System.out.println("Rules printing...");
-                    break;
-                case "0" :
-                    System.out.println("Bye bye!");
-                    return;
-                default:
-                    System.out.print("Error try again: ");
-            }
-        }*/
-
-
-
     public void askForMove() {
         while (Computer.compPawnNumbers > 0 && Player.playerPawnNumbers > 0 &&
                 !(board.arePawnsOnFinalSide(Player.playerPAWN, 2, 7)) &&
                 !(board.arePawnsOnFinalSide(Computer.computerPAWN, 0, 5))) {
 
-                        Board.printBoard();
+            Board.printBoard();
             boolean validMove = false;
 
             while (!validMove) {
@@ -89,7 +65,6 @@ public class GameLogic {
                 }
             }
 
-            // Ruch pionem
             while (currentPlayer.equals("Human")) {
                 try {
                     System.out.println("MOVE TO: ");
@@ -110,10 +85,6 @@ public class GameLogic {
         }
         board.printGameOverMessage();
     }
-
-
-
-
 }
 
 
